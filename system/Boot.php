@@ -204,6 +204,8 @@ class Boot
      */
     protected static function loadDotEnv(Paths $paths): void
     {
+        require_once $paths->systemDirectory . '/Exceptions/ExceptionInterface.php';
+        require_once $paths->systemDirectory . '/Exceptions/InvalidArgumentException.php';
         require_once $paths->systemDirectory . '/Config/DotEnv.php';
         $envDirectory = $paths->envDirectory ?? $paths->appDirectory . '/../';
         (new DotEnv($envDirectory))->load();
