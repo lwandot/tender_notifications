@@ -103,7 +103,7 @@ curl "http://localhost:8080/api/tenders?province_id=1&page=1&perPage=20"
 1. Get API key from Treasury Department
 2. Update `.env`:
    ```
-   TREASURY_API_URL = https://api.treasury.gov.za/tenders
+   TREASURY_API_URL = https://ocds-api.etenders.gov.za/swagger/v1/swagger.json
    TREASURY_API_KEY = your-key
    ```
 

@@ -14,7 +14,7 @@ class TreasuryAPIService
 
     public function __construct()
     {
-        $this->apiBaseUrl = getenv('TREASURY_API_URL') ?? 'https://api.treasury.gov.za/tenders';
+        $this->apiBaseUrl = getenv('TREASURY_API_URL') ?? 'https://ocds-api.etenders.gov.za/swagger/v1/swagger.json';
         $this->apiKey = getenv('TREASURY_API_KEY');
         
         // Initialize HTTP client

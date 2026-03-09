@@ -33,7 +33,7 @@ email.fromName = Government Tenders
 
 ### Treasury API Configuration
 ```
-TREASURY_API_URL = https://api.treasury.gov.za/tenders
+TREASURY_API_URL = https://ocds-api.etenders.gov.za/swagger/v1/swagger.json
 TREASURY_API_KEY = your-api-key-here
 ```
 
