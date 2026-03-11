@@ -148,7 +148,7 @@ class Model extends BaseModel
         /**
          * @var BaseConnection|null $db
          */
-        $db ??= Database::connect($this->DBGroup);
+        $db ??= db_connect($this->DBGroup);
 
         $this->db = $db;
 
@@ -592,7 +592,7 @@ class Model extends BaseModel
 
         // Ensure we have a good db connection
         if (! $this->db instanceof BaseConnection) {
-            $this->db = Database::connect($this->DBGroup);
+            $this->db = db_connect($this->DBGroup);
         }
 
         $builder = $this->db->table($table);

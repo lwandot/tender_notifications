@@ -252,7 +252,7 @@ class Database extends BaseCollector
      */
     private function getConnections(): void
     {
-        $this->connections = \Config\Database::getConnections();
+        $this->connections = \CodeIgniter\Database\Config::getConnections();
     }
 
     /**

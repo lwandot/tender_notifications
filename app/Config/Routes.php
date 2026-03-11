@@ -53,4 +53,4 @@ $routes->get('api/documents/download/(:num)', 'Api::downloadDocument/$1');
 
 $routes->get('/', 'Home::index');
 
-require APPPATH . 'Config/Routes.php';
+// require APPPATH . 'Config/Routes.php';

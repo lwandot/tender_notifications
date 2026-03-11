@@ -1,0 +1,103 @@
+CRITICAL - 2026-03-12 07:25:15 --> Error: Call to undefined method Config\Database::connect()
+[Method: GET, Route: /]
+in SYSTEMPATH\Common.php on line 391.
+ 1 SYSTEMPATH\Model.php(151): db_connect(null)
+ 2 APPPATH\Controllers\Home.php(14): CodeIgniter\Model->__construct()
+ 3 SYSTEMPATH\CodeIgniter.php(951): App\Controllers\Home->index()
+ 4 SYSTEMPATH\CodeIgniter.php(497): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Home))
+ 5 SYSTEMPATH\CodeIgniter.php(340): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 6 SYSTEMPATH\Boot.php(419): CodeIgniter\CodeIgniter->run()
+ 7 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+ 8 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+CRITICAL - 2026-03-12 07:25:30 --> Error: Call to undefined method Config\Database::connect()
+[Method: GET, Route: /]
+in SYSTEMPATH\Common.php on line 391.
+ 1 SYSTEMPATH\Model.php(151): db_connect(null)
+ 2 APPPATH\Controllers\Home.php(14): CodeIgniter\Model->__construct()
+ 3 SYSTEMPATH\CodeIgniter.php(951): App\Controllers\Home->index()
+ 4 SYSTEMPATH\CodeIgniter.php(497): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Home))
+ 5 SYSTEMPATH\CodeIgniter.php(340): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 6 SYSTEMPATH\Boot.php(419): CodeIgniter\CodeIgniter->run()
+ 7 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+ 8 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+CRITICAL - 2026-03-12 07:32:01 --> ParseError: Unclosed '{' on line 10
+[Method: GET, Route: /]
+in APPPATH\Config\Database.php on line 86.
+ 1 SYSTEMPATH\Autoloader\Autoloader.php(295): CodeIgniter\Autoloader\Autoloader->includeFile('C:\\Users\\Administrator\\PersonalProjects\\tender_notifications\\app\\Config\\Database.php')
+ 2 SYSTEMPATH\Autoloader\Autoloader.php(271): CodeIgniter\Autoloader\Autoloader->loadInNamespace('Config\\Database')
+ 3 SYSTEMPATH\Common.php(391): CodeIgniter\Autoloader\Autoloader->loadClass('Config\\Database')
+ 4 SYSTEMPATH\Model.php(151): db_connect(null)
+ 5 APPPATH\Controllers\Home.php(14): CodeIgniter\Model->__construct()
+ 6 SYSTEMPATH\CodeIgniter.php(951): App\Controllers\Home->index()
+ 7 SYSTEMPATH\CodeIgniter.php(497): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Home))
+ 8 SYSTEMPATH\CodeIgniter.php(340): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 9 SYSTEMPATH\Boot.php(419): CodeIgniter\CodeIgniter->run()
+10 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+11 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+CRITICAL - 2026-03-12 07:33:49 --> Error: Call to undefined method CodeIgniter\Database\Database::connect()
+[Method: GET, Route: /]
+in APPPATH\Config\Database.php on line 84.
+ 1 SYSTEMPATH\Common.php(391): Config\Database::connect(null, true)
+ 2 SYSTEMPATH\Model.php(151): db_connect(null)
+ 3 APPPATH\Controllers\Home.php(14): CodeIgniter\Model->__construct()
+ 4 SYSTEMPATH\CodeIgniter.php(951): App\Controllers\Home->index()
+ 5 SYSTEMPATH\CodeIgniter.php(497): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Home))
+ 6 SYSTEMPATH\CodeIgniter.php(340): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 7 SYSTEMPATH\Boot.php(419): CodeIgniter\CodeIgniter->run()
+ 8 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+ 9 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+ERROR - 2026-03-12 07:35:15 --> Error connecting to the database: mysqli_sql_exception: Unknown database 'tender_notifications' in C:\Users\Administrator\PersonalProjects\tender_notifications\system\Database\MySQLi\Connection.php:201
+Stack trace:
+#0 C:\Users\Administrator\PersonalProjects\tender_notifications\system\Database\MySQLi\Connection.php(201): mysqli->real_connect('localhost', 'root', Object(SensitiveParameterValue), 'tender_notifica...', 3306, '', 0)
+#1 C:\Users\Administrator\PersonalProjects\tender_notifications\system\Database\BaseConnection.php(419): CodeIgniter\Database\MySQLi\Connection->connect(false)
+#2 C:\Users\Administrator\PersonalProjects\tender_notifications\system\Database\BaseConnection.php(654): CodeIgniter\Database\BaseConnection->initialize()
+#3 C:\Users\Administrator\PersonalProjects\tender_notifications\system\Database\BaseBuilder.php(1649): CodeIgniter\Database\BaseConnection->query('SELECT *\nFROM `...', Array, false)
+#4 C:\Users\Administrator\PersonalProjects\tender_notifications\system\Model.php(254): CodeIgniter\Database\BaseBuilder->get()
+#5 C:\Users\Administrator\PersonalProjects\tender_notifications\system\BaseModel.php(675): CodeIgniter\Model->doFindAll(0, 0)
+#6 C:\Users\Administrator\PersonalProjects\tender_notifications\app\Models\TenderModel.php(102): CodeIgniter\BaseModel->findAll()
+#7 C:\Users\Administrator\PersonalProjects\tender_notifications\app\Controllers\Home.php(36): App\Models\TenderModel->filterTenders(Array, 10, 0)
+#8 C:\Users\Administrator\PersonalProjects\tender_notifications\system\CodeIgniter.php(951): App\Controllers\Home->index()
+#9 C:\Users\Administrator\PersonalProjects\tender_notifications\system\CodeIgniter.php(497): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Home))
+#10 C:\Users\Administrator\PersonalProjects\tender_notifications\system\CodeIgniter.php(340): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#11 C:\Users\Administrator\PersonalProjects\tender_notifications\system\Boot.php(419): CodeIgniter\CodeIgniter->run()
+#12 C:\Users\Administrator\PersonalProjects\tender_notifications\system\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+#13 C:\Users\Administrator\PersonalProjects\tender_notifications\public\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+#14 {main}
+
+Next CodeIgniter\Database\Exceptions\DatabaseException: Unknown database 'tender_notifications' in C:\Users\Administrator\PersonalProjects\tender_notifications\system\Database\MySQLi\Connection.php:231
+Stack trace:
+#0 C:\Users\Administrator\PersonalProjects\tender_notifications\system\Database\BaseConnection.php(419): CodeIgniter\Database\MySQLi\Connection->connect(false)
+#1 C:\Users\Administrator\PersonalProjects\tender_notifications\system\Database\BaseConnection.php(654): CodeIgniter\Database\BaseConnection->initialize()
+#2 C:\Users\Administrator\PersonalProjects\tender_notifications\system\Database\BaseBuilder.php(1649): CodeIgniter\Database\BaseConnection->query('SELECT *\nFROM `...', Array, false)
+#3 C:\Users\Administrator\PersonalProjects\tender_notifications\system\Model.php(254): CodeIgniter\Database\BaseBuilder->get()
+#4 C:\Users\Administrator\PersonalProjects\tender_notifications\system\BaseModel.php(675): CodeIgniter\Model->doFindAll(0, 0)
+#5 C:\Users\Administrator\PersonalProjects\tender_notifications\app\Models\TenderModel.php(102): CodeIgniter\BaseModel->findAll()
+#6 C:\Users\Administrator\PersonalProjects\tender_notifications\app\Controllers\Home.php(36): App\Models\TenderModel->filterTenders(Array, 10, 0)
+#7 C:\Users\Administrator\PersonalProjects\tender_notifications\system\CodeIgniter.php(951): App\Controllers\Home->index()
+#8 C:\Users\Administrator\PersonalProjects\tender_notifications\system\CodeIgniter.php(497): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Home))
+#9 C:\Users\Administrator\PersonalProjects\tender_notifications\system\CodeIgniter.php(340): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#10 C:\Users\Administrator\PersonalProjects\tender_notifications\system\Boot.php(419): CodeIgniter\CodeIgniter->run()
+#11 C:\Users\Administrator\PersonalProjects\tender_notifications\system\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+#12 C:\Users\Administrator\PersonalProjects\tender_notifications\public\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+#13 {main}
+CRITICAL - 2026-03-12 07:35:15 --> CodeIgniter\Database\Exceptions\DatabaseException: Unable to connect to the database.
+Main connection [MySQLi]: Unknown database 'tender_notifications'
+[Method: GET, Route: /]
+in SYSTEMPATH\Database\BaseConnection.php on line 465.
+ 1 SYSTEMPATH\Database\BaseConnection.php(654): CodeIgniter\Database\BaseConnection->initialize()
+ 2 SYSTEMPATH\Database\BaseBuilder.php(1649): CodeIgniter\Database\BaseConnection->query('SELECT *
+FROM `tenders`
+WHERE `status` = :status:
+ORDER BY `closing_date` ASC
+ LIMIT 10', [...], false)
+ 3 SYSTEMPATH\Model.php(254): CodeIgniter\Database\BaseBuilder->get()
+ 4 SYSTEMPATH\BaseModel.php(675): CodeIgniter\Model->doFindAll(0, 0)
+ 5 APPPATH\Models\TenderModel.php(102): CodeIgniter\BaseModel->findAll()
+ 6 APPPATH\Controllers\Home.php(36): App\Models\TenderModel->filterTenders([], 10, 0)
+ 7 SYSTEMPATH\CodeIgniter.php(951): App\Controllers\Home->index()
+ 8 SYSTEMPATH\CodeIgniter.php(497): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Home))
+ 9 SYSTEMPATH\CodeIgniter.php(340): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+10 SYSTEMPATH\Boot.php(419): CodeIgniter\CodeIgniter->run()
+11 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+12 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+DEBUG - 2026-03-12 07:38:24 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
