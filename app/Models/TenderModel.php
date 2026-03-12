@@ -27,14 +27,24 @@ class TenderModel
     /**
      * Get active tenders with pagination
      */
-    public function getActiveTenders($limit = 20, $offset = 0)
+    public function getActiveTenders($limit = 20, $offset = 0, ?string $dateFrom = null, ?string $dateTo = null)
     {
-        $result = $this->apiService->searchTenders([
+        $page = floor($offset / $limit) + 1;
+
+        $params = [
             'status' => 'active',
-            'limit' => $limit,
-            'page' => floor($offset / $limit) + 1,
-        ]);
-        
+            'PageSize' => $limit,
+            'PageNumber' => $page,
+        ];
+
+        if ($dateFrom !== null) {
+            $params['dateFrom'] = $dateFrom;
+        }
+        if ($dateTo !== null) {
+            $params['dateTo'] = $dateTo;
+        }
+
+        $result = $this->apiService->searchTenders($params);
         $tenders = [];
         if (!empty($result['data'])) {
             foreach ($result['data'] as $item) {
@@ -87,9 +97,11 @@ class TenderModel
      */
     public function filterTenders($filters, $limit = 20, $offset = 0)
     {
+        $page = floor($offset / $limit) + 1;
+
         $searchFilters = [
-            'limit' => $limit,
-            'page' => floor($offset / $limit) + 1,
+            'PageSize' => $limit,
+            'PageNumber' => $page,
             'status' => 'active',
         ];
 
@@ -108,6 +120,14 @@ class TenderModel
 
         if (!empty($filters['organ_of_state_id'])) {
             $searchFilters['organisation'] = $filters['organ_of_state_id'];
+        }
+
+        // date filters if present
+        if (!empty($filters['dateFrom'])) {
+            $searchFilters['dateFrom'] = $filters['dateFrom'];
+        }
+        if (!empty($filters['dateTo'])) {
+            $searchFilters['dateTo'] = $filters['dateTo'];
         }
 
         $result = $this->apiService->searchTenders($searchFilters);
@@ -145,6 +165,13 @@ class TenderModel
 
         if (!empty($filters['organ_of_state_id'])) {
             $searchFilters['organisation'] = $filters['organ_of_state_id'];
+        }
+
+        if (!empty($filters['dateFrom'])) {
+            $searchFilters['dateFrom'] = $filters['dateFrom'];
+        }
+        if (!empty($filters['dateTo'])) {
+            $searchFilters['dateTo'] = $filters['dateTo'];
         }
 
         $result = $this->apiService->searchTenders($searchFilters);

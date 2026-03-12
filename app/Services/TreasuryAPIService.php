@@ -8,172 +8,167 @@ namespace App\Services;
  */
 class TreasuryAPIService
 {
-    protected $apiBaseUrl;
-    protected $apiKey;
+    protected string $apiBaseUrl;
+    protected ?string $apiKey;
     protected $client;
 
     public function __construct()
     {
-        $this->apiBaseUrl = getenv('TREASURY_API_URL') ?? 'https://ocds-api.etenders.gov.za/api/OCDSReleases?PageSize=200&dateFrom=2024-01-01&dateTo=2024-03-31';
+        // Base URL should point to the releases endpoint without query params
+        $this->apiBaseUrl = rtrim(getenv('TREASURY_API_URL') ?: 'https://ocds-api.etenders.gov.za/api/OCDSReleases', '/');
         $this->apiKey = getenv('TREASURY_API_KEY');
         
         // Initialize HTTP client
-        $this->client = \Config\Services::curlRequest();
+        $this->client = \Config\Services::curlRequest(['timeout' => 30]);
     }
 
     /**
-     * Fetch tenders from the treasury API
+     * Perform a GET request to the releases endpoint with given query parameters.
      */
-    public function fetchTenders($since = null)
+    protected function request(array $query = []): array
     {
         try {
-            $url = $this->apiBaseUrl . '/list';
             $headers = [
-                'Authorization' => 'Bearer ' . $this->apiKey,
-                'Accept' => 'application/json'
+                'Accept' => 'application/json',
             ];
 
-            $params = [];
-            if ($since) {
-                $params['since'] = $since->format('Y-m-d');
+            if ($this->apiKey) {
+                $headers['Authorization'] = 'Bearer ' . $this->apiKey;
             }
 
-            $response = $this->client->request('GET', $url, [
+            $response = $this->client->request('GET', $this->apiBaseUrl, [
                 'headers' => $headers,
-                'query' => $params,
-                'http_errors' => false
+                'query'   => $query,
+                'http_errors' => false,
             ]);
-
-            $statusCode = $response->getStatusCode();
-            if ($statusCode !== 200) {
-                log_message('error', "Treasury API error: " . $response->getBody());
+            if ($response->getStatusCode() !== 200) {
+                log_message('error', 'Treasury API request failed: ' . $response->getBody());
                 return [];
             }
 
-            $body = $response->getBody();
-            return json_decode($body, true);
+            return json_decode($response->getBody(), true) ?: [];
         } catch (\Exception $e) {
-            log_message('error', "Treasury API exception: " . $e->getMessage());
+            log_message('error', 'Treasury API request exception: ' . $e->getMessage());
             return [];
         }
     }
 
     /**
-     * Fetch tender details from the API
+     * Fetch tenders from the treasury API (wrapper for request)
+     *
+     * Accepts same parameters as searchTenders for convenience.
+     */
+    public function fetchTenders(array $params = []): array
+    {
+        return $this->request($params);
+    }
+
+    /**
+     * Fetch tender details from the API by release ID
      */
     public function getTenderDetails($apiId)
     {
-        try {
-            $url = $this->apiBaseUrl . '/' . $apiId;
-            $headers = [
-                'Authorization' => 'Bearer ' . $this->apiKey,
-                'Accept' => 'application/json'
-            ];
+        $result = $this->request(['id' => $apiId]);
 
-            $response = $this->client->request('GET', $url, [
-                'headers' => $headers,
-                'http_errors' => false
-            ]);
-
-            if ($response->getStatusCode() !== 200) {
-                return null;
-            }
-
-            $body = $response->getBody();
-            return json_decode($body, true);
-        } catch (\Exception $e) {
-            log_message('error', "Treasury API exception: " . $e->getMessage());
-            return null;
+        // API returns releases array
+        if (!empty($result['releases'][0])) {
+            return $result['releases'][0]['tender'] ?? $result['releases'][0];
         }
+
+        return null;
     }
 
     /**
-     * Parse API response and map to tender model
+     * Parse API release/tender object and map to tender model
      */
     public function mapTenderData($apiData)
     {
+        // release may contain 'tender' sub-object
+        if (isset($apiData['tender'])) {
+            $apiData = $apiData['tender'];
+        }
+
         return [
-            'tender_number' => $apiData['tenderNumber'] ?? null,
+            'tender_number' => $apiData['id'] ?? $apiData['tenderNumber'] ?? null,
             'title' => $apiData['title'] ?? null,
             'description' => $apiData['description'] ?? null,
-            'tender_type' => $apiData['type'] ?? 'goods',
-            'closing_date' => $apiData['closingDate'] ?? null,
-            'opening_date' => $apiData['openingDate'] ?? null,
-            'published_date' => $apiData['publishedDate'] ?? null,
-            'budget_estimate' => $apiData['budget'] ?? null,
+            'category' => $apiData['category'] ?? null,
+            'province' => $apiData['province'] ?? null,
+            'delivery_location' => $apiData['deliveryLocation'] ?? null,
+            'special_conditions' => $apiData['specialConditions'] ?? null,
+            'main_procurement_category' => $apiData['mainProcurementCategory'] ?? null,
+            'additional_procurement_categories' => $apiData['additionalProcurementCategories'] ?? [],
+            'tender_type' => $apiData['status'] ?? null,
+            'closing_date' => $apiData['tenderPeriod']['endDate'] ?? null,
+            'opening_date' => $apiData['tenderPeriod']['startDate'] ?? null,
+            'published_date' => $apiData['date'] ?? null,
+            'budget_estimate' => $apiData['value']['amount'] ?? null,
+            'budget_currency' => $apiData['value']['currency'] ?? null,
             'status' => $apiData['status'] ?? 'active',
             'api_id' => $apiData['id'] ?? null,
+            'documents' => $apiData['documents'] ?? [],
+            'briefing_session' => $apiData['briefingSession'] ?? null,
+            'contact_person' => $apiData['contactPerson'] ?? null,
+            'procuring_entity' => $apiData['procuringEntity'] ?? null,
         ];
     }
-
     /**
-     * Search tenders with filters
+     * Search tenders with filters using the API's query parameters
      */
-    public function searchTenders(array $filters = [])
+    public function searchTenders(array $filters = []): array
     {
-        try {
-            $url = $this->apiBaseUrl . '/search';
-            $headers = [
-                'Authorization' => 'Bearer ' . $this->apiKey,
-                'Accept' => 'application/json'
-            ];
+        $query = [];
 
-            $query = [];
-
-            // Map filter parameters to API query parameters
-            if (!empty($filters['search'])) {
-                $query['q'] = $filters['search'];
-            }
-
-            if (!empty($filters['status'])) {
-                $query['status'] = $filters['status'];
-            }
-
-            if (!empty($filters['tender_type'])) {
-                $query['type'] = $filters['tender_type'];
-            }
-
-            if (!empty($filters['province'])) {
-                $query['province'] = $filters['province'];
-            }
-
-            if (!empty($filters['organisation'])) {
-                $query['organisation'] = $filters['organisation'];
-            }
-
-            if (!empty($filters['page'])) {
-                $query['page'] = $filters['page'];
-            }
-
-            if (!empty($filters['limit'])) {
-                $query['limit'] = $filters['limit'];
-            }
-
-            $response = $this->client->request('GET', $url, [
-                'headers' => $headers,
-                'query' => $query,
-                'http_errors' => false
-            ]);
-
-            $statusCode = $response->getStatusCode();
-            if ($statusCode !== 200) {
-                log_message('error', "Treasury API search error: " . $response->getBody());
-                return ['data' => [], 'total' => 0];
-            }
-
-            $body = $response->getBody();
-            $result = json_decode($body, true);
-
-            return [
-                'data' => $result['data'] ?? [],
-                'total' => $result['total'] ?? count($result['data'] ?? []),
-                'page' => $result['page'] ?? 1,
-                'limit' => $result['limit'] ?? 20,
-            ];
-        } catch (\Exception $e) {
-            log_message('error', "Treasury API search exception: " . $e->getMessage());
-            return ['data' => [], 'total' => 0];
+        if (!empty($filters['search'])) {
+            // API supports free-text q parameter
+            $query['q'] = $filters['search'];
         }
+
+        if (!empty($filters['status'])) {
+            $query['status'] = $filters['status'];
+        }
+
+        if (!empty($filters['tender_type'])) {
+            $query['category'] = $filters['tender_type'];
+        }
+
+        if (!empty($filters['province'])) {
+            $query['province'] = $filters['province'];
+        }
+
+        if (!empty($filters['organisation'])) {
+            $query['procuringEntity'] = $filters['organisation'];
+        }
+
+        if (!empty($filters['dateFrom'])) {
+            $query['dateFrom'] = $filters['dateFrom'];
+        }
+
+        if (!empty($filters['dateTo'])) {
+            $query['dateTo'] = $filters['dateTo'];
+        }
+
+        // paging parameters use PageNumber/PageSize
+        if (!empty($filters['page'])) {
+            $query['PageNumber'] = $filters['page'];
+        }
+
+        if (!empty($filters['limit'])) {
+            $query['PageSize'] = $filters['limit'];
+        }
+
+        $result = $this->request($query);
+
+        // Response has 'releases' as data
+        $data = $result['releases'] ?? [];
+        $total = $result['total'] ?? count($data);
+
+        return [
+            'data' => $data,
+            'total' => $total,
+            'page' => $query['PageNumber'] ?? 1,
+            'limit' => $query['PageSize'] ?? 20,
+        ];
     }
 
     /**

@@ -27,14 +27,22 @@ class Home extends BaseController
             'category_id' => $this->request->getVar('category_id'),
             'tender_type' => $this->request->getVar('tender_type'),
             'search' => $this->request->getVar('search'),
+            'dateFrom' => $this->request->getVar('dateFrom'),
+            'dateTo'   => $this->request->getVar('dateTo'),
         ];
 
         // Remove null filters
-        $filters = array_filter($filters);
+        $filters = array_filter($filters, fn($v) => $v !== null && $v !== '');
 
-        // Get filtered tenders
-        $tenders = $tenderModel->filterTenders($filters, $perPage, $offset);
-        $totalTenders = $tenderModel->countFilteredTenders($filters);
+        // Choose retrieval method depending on presence of filters
+        if (empty($filters)) {
+            // page load, no user filters: use getActiveTenders so defaults are applied
+            $tenders = $tenderModel->getActiveTenders($perPage, $offset);
+            $totalTenders = $tenderModel->countFilteredTenders([]);
+        } else {
+            $tenders = $tenderModel->filterTenders($filters, $perPage, $offset);
+            $totalTenders = $tenderModel->countFilteredTenders($filters);
+        }
 
         // Get filter options
         $categories = $categoryModel->findAll();
