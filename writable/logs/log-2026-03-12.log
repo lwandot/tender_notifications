@@ -101,3 +101,29 @@ ORDER BY `closing_date` ASC
 11 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
 12 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
 DEBUG - 2026-03-12 07:38:24 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2026-03-12 08:15:54 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+CRITICAL - 2026-03-12 08:26:33 --> Error: Call to undefined method App\Services\TreasuryAPIService::searchTenders()
+[Method: GET, Route: /]
+in APPPATH\Models\TenderModel.php on line 115.
+ 1 APPPATH\Controllers\Home.php(36): App\Models\TenderModel->filterTenders([], 10, 0)
+ 2 SYSTEMPATH\CodeIgniter.php(951): App\Controllers\Home->index()
+ 3 SYSTEMPATH\CodeIgniter.php(497): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Home))
+ 4 SYSTEMPATH\CodeIgniter.php(340): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 5 SYSTEMPATH\Boot.php(419): CodeIgniter\CodeIgniter->run()
+ 6 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+ 7 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+ERROR - 2026-03-12 08:28:44 --> Treasury API search error: 
+ERROR - 2026-03-12 08:28:45 --> Treasury API search error: 
+DEBUG - 2026-03-12 08:28:46 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+ERROR - 2026-03-12 08:29:09 --> Treasury API search error: 
+ERROR - 2026-03-12 08:29:10 --> Treasury API search error: 
+DEBUG - 2026-03-12 08:29:10 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+ERROR - 2026-03-12 08:45:09 --> Treasury API search error: {"type":"https://tools.ietf.org/html/rfc7231#section-6.5.1","title":"One or more validation errors occurred.","status":400,"traceId":"00-10388b4c5a6d1d0677d50dc6144b1905-764cca4b3ac08f56-00","errors":{"dateTo":["The value '2024-03-31/search?status=active' is not valid."]}}
+ERROR - 2026-03-12 08:45:10 --> Treasury API search error: {"type":"https://tools.ietf.org/html/rfc7231#section-6.5.1","title":"One or more validation errors occurred.","status":400,"traceId":"00-76bcf9e065b3aade97becb5a488eb217-cf25f806d3bed097-00","errors":{"dateTo":["The value '2024-03-31/search?status=active' is not valid."]}}
+DEBUG - 2026-03-12 08:45:10 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+ERROR - 2026-03-12 08:45:16 --> Treasury API search error: {"type":"https://tools.ietf.org/html/rfc7231#section-6.5.1","title":"One or more validation errors occurred.","status":400,"traceId":"00-46b71c8471ec6abc22f99e5d8864e880-9f237a14e201f43d-00","errors":{"dateTo":["The value '2024-03-31/search?status=active' is not valid."]}}
+ERROR - 2026-03-12 08:45:18 --> Treasury API search error: {"type":"https://tools.ietf.org/html/rfc7231#section-6.5.1","title":"One or more validation errors occurred.","status":400,"traceId":"00-ee5f9c521cb798c7b7e75aa27986673e-e7b9f16809d696fe-00","errors":{"dateTo":["The value '2024-03-31/search?status=active' is not valid."]}}
+DEBUG - 2026-03-12 08:45:18 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+ERROR - 2026-03-12 08:46:31 --> Treasury API search error: {"type":"https://tools.ietf.org/html/rfc7231#section-6.5.1","title":"One or more validation errors occurred.","status":400,"traceId":"00-ddc8154911ee994958f9c245a21edfa3-5c72eb000289429a-00","errors":{"dateTo":["The value '2024-03-31/search?status=active' is not valid."]}}
+ERROR - 2026-03-12 08:46:32 --> Treasury API search error: {"type":"https://tools.ietf.org/html/rfc7231#section-6.5.1","title":"One or more validation errors occurred.","status":400,"traceId":"00-a2a55b271129ca1a6f10f71f32d1d25d-fb5e59f144851dc0-00","errors":{"dateTo":["The value '2024-03-31/search?status=active' is not valid."]}}
+DEBUG - 2026-03-12 08:46:32 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.

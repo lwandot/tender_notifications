@@ -2,42 +2,52 @@
 
 namespace App\Models;
 
-use CodeIgniter\Model;
+use App\Services\TreasuryAPIService;
 
-class TenderModel extends Model
+class TenderModel
 {
+    protected TreasuryAPIService $apiService;
     protected $table = 'tenders';
     protected $primaryKey = 'id';
-    protected $useAutoIncrement = true;
-    protected $returnType = 'array';
-    protected $useSoftDeletes = false;
-    protected $allowedFields = [
-        'tender_number', 'title', 'description', 'organ_of_state_id', 
-        'province_id', 'tender_type', 'status', 'opening_date', 'closing_date', 
-        'published_date', 'budget_estimate', 'api_id'
-    ];
-    protected $useTimestamps = true;
-    protected $createdField = 'created_at';
-    protected $updatedField = 'updated_at';
-    protected $validationRules = [
-        'tender_number' => 'required|string|max_length[100]|is_unique[tenders.tender_number]',
-        'title' => 'required|string|max_length[255]',
-        'description' => 'required|string',
-        'organ_of_state_id' => 'required|integer',
-        'province_id' => 'required|integer',
-        'tender_type' => 'required|string|max_length[50]',
-        'status' => 'in_list[active,closed,awarded]',
-        'closing_date' => 'valid_date[Y-m-d H:i:s]',
-    ];
 
-    public function getActiveTenders($limit = 20, $offset = 0)
+    public function __construct()
     {
-        return $this->where('status', 'active')
-            ->orderBy('closing_date', 'ASC')
-            ->limit($limit, $offset)
-            ->findAll();
+        $this->apiService = new TreasuryAPIService();
     }
 
+    /**
+     * Get a single tender by API ID
+     */
+    public function find($id)
+    {
+        $tender = $this->apiService->getTenderDetails($id);
+        return $tender ? $this->apiService->mapTenderData($tender) : null;
+    }
+
+    /**
+     * Get active tenders with pagination
+     */
+    public function getActiveTenders($limit = 20, $offset = 0)
+    {
+        $result = $this->apiService->searchTenders([
+            'status' => 'active',
+            'limit' => $limit,
+            'page' => floor($offset / $limit) + 1,
+        ]);
+        
+        $tenders = [];
+        if (!empty($result['data'])) {
+            foreach ($result['data'] as $item) {
+                $tenders[] = $this->apiService->mapTenderData($item);
+            }
+        }
+
+        return $tenders;
+    }
+
+    /**
+     * Get tender with all related details
+     */
     public function getTenderWithDetails($tenderId)
     {
         $tender = $this->find($tenderId);
@@ -45,93 +55,100 @@ class TenderModel extends Model
             return null;
         }
 
-        // Load related data
-        $tender['organ_of_state'] = (new OrganOfStateModel())->find($tender['organ_of_state_id']);
-        $tender['province'] = (new ProvinceModel())->find($tender['province_id']);
-        $tender['enquiries'] = (new TenderEnquiryModel())->where('tender_id', $tenderId)->findAll();
-        $tender['briefing_sessions'] = (new BriefingSessionModel())->where('tender_id', $tenderId)->findAll();
-        $tender['documents'] = (new TenderDocumentModel())->where('tender_id', $tenderId)->findAll();
-        $tender['categories'] = $this->getCategories($tenderId);
+        // Enrich tender data from API
+        $apiData = $this->apiService->getTenderDetails($tenderId);
+        
+        if ($apiData) {
+            // Add nested details from API response
+            $tender['enquiries'] = $apiData['enquiries'] ?? [];
+            $tender['briefing_sessions'] = $apiData['briefingSessions'] ?? [];
+            $tender['documents'] = $apiData['documents'] ?? [];
+            $tender['categories'] = $apiData['categories'] ?? [];
+            
+            // Add organ of state and province info from API
+            $tender['organ_of_state'] = $apiData['organisingEntity'] ?? null;
+            $tender['province'] = $apiData['province'] ?? null;
+        }
 
         return $tender;
     }
 
+    /**
+     * Get categories for a tender from API
+     */
     public function getCategories($tenderId)
     {
-        return $this->db->table('tender_categories')
-            ->join('categories', 'tender_categories.category_id = categories.id')
-            ->where('tender_categories.tender_id', $tenderId)
-            ->select('categories.*')
-            ->get()
-            ->getResultArray();
+        $tender = $this->apiService->getTenderDetails($tenderId);
+        return $tender['categories'] ?? [];
     }
 
+    /**
+     * Filter tenders by various criteria
+     */
     public function filterTenders($filters, $limit = 20, $offset = 0)
     {
-        $builder = $this->where('status', 'active');
+        $searchFilters = [
+            'limit' => $limit,
+            'page' => floor($offset / $limit) + 1,
+            'status' => 'active',
+        ];
 
-        if (!empty($filters['province_id'])) {
-            $builder->where('province_id', $filters['province_id']);
-        }
-
-        if (!empty($filters['organ_of_state_id'])) {
-            $builder->where('organ_of_state_id', $filters['organ_of_state_id']);
-        }
-
-        if (!empty($filters['category_id'])) {
-            $builder->join('tender_categories', 'tender_categories.tender_id = tenders.id')
-                ->where('tender_categories.category_id', $filters['category_id']);
+        // Map filter parameters to API parameters
+        if (!empty($filters['search'])) {
+            $searchFilters['search'] = $filters['search'];
         }
 
         if (!empty($filters['tender_type'])) {
-            $builder->where('tender_type', $filters['tender_type']);
+            $searchFilters['tender_type'] = $filters['tender_type'];
         }
 
-        if (!empty($filters['search'])) {
-            $search = $filters['search'];
-            $builder->groupStart()
-                ->like('title', $search)
-                ->orLike('description', $search)
-                ->orLike('tender_number', $search)
-                ->groupEnd();
+        if (!empty($filters['province_id'])) {
+            $searchFilters['province'] = $filters['province_id'];
         }
 
-        $builder->orderBy('closing_date', 'ASC')
-            ->limit($limit, $offset);
+        if (!empty($filters['organ_of_state_id'])) {
+            $searchFilters['organisation'] = $filters['organ_of_state_id'];
+        }
 
-        return $builder->findAll();
+        $result = $this->apiService->searchTenders($searchFilters);
+        $tenders = [];
+
+        if (!empty($result['data'])) {
+            foreach ($result['data'] as $item) {
+                $tenders[] = $this->apiService->mapTenderData($item);
+            }
+        }
+
+        return $tenders;
     }
 
+    /**
+     * Count filtered tenders
+     */
     public function countFilteredTenders($filters)
     {
-        $builder = $this->where('status', 'active');
+        $searchFilters = [
+            'status' => 'active',
+        ];
 
-        if (!empty($filters['province_id'])) {
-            $builder->where('province_id', $filters['province_id']);
-        }
-
-        if (!empty($filters['organ_of_state_id'])) {
-            $builder->where('organ_of_state_id', $filters['organ_of_state_id']);
-        }
-
-        if (!empty($filters['category_id'])) {
-            $builder->join('tender_categories', 'tender_categories.tender_id = tenders.id')
-                ->where('tender_categories.category_id', $filters['category_id']);
+        if (!empty($filters['search'])) {
+            $searchFilters['search'] = $filters['search'];
         }
 
         if (!empty($filters['tender_type'])) {
-            $builder->where('tender_type', $filters['tender_type']);
+            $searchFilters['tender_type'] = $filters['tender_type'];
         }
 
-        if (!empty($filters['search'])) {
-            $search = $filters['search'];
-            $builder->groupStart()
-                ->like('title', $search)
-                ->orLike('description', $search)
-                ->orLike('tender_number', $search)
-                ->groupEnd();
+        if (!empty($filters['province_id'])) {
+            $searchFilters['province'] = $filters['province_id'];
         }
 
-        return $builder->countAllResults();
+        if (!empty($filters['organ_of_state_id'])) {
+            $searchFilters['organisation'] = $filters['organ_of_state_id'];
+        }
+
+        $result = $this->apiService->searchTenders($searchFilters);
+        
+        return $result['total'] ?? count($result['data'] ?? []);
     }
 }

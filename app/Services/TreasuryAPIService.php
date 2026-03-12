@@ -14,7 +14,7 @@ class TreasuryAPIService
 
     public function __construct()
     {
-        $this->apiBaseUrl = getenv('TREASURY_API_URL') ?? 'https://ocds-api.etenders.gov.za/swagger/v1/swagger.json';
+        $this->apiBaseUrl = getenv('TREASURY_API_URL') ?? 'https://ocds-api.etenders.gov.za/api/OCDSReleases?PageSize=200&dateFrom=2024-01-01&dateTo=2024-03-31';
         $this->apiKey = getenv('TREASURY_API_KEY');
         
         // Initialize HTTP client
@@ -104,6 +104,76 @@ class TreasuryAPIService
             'status' => $apiData['status'] ?? 'active',
             'api_id' => $apiData['id'] ?? null,
         ];
+    }
+
+    /**
+     * Search tenders with filters
+     */
+    public function searchTenders(array $filters = [])
+    {
+        try {
+            $url = $this->apiBaseUrl . '/search';
+            $headers = [
+                'Authorization' => 'Bearer ' . $this->apiKey,
+                'Accept' => 'application/json'
+            ];
+
+            $query = [];
+
+            // Map filter parameters to API query parameters
+            if (!empty($filters['search'])) {
+                $query['q'] = $filters['search'];
+            }
+
+            if (!empty($filters['status'])) {
+                $query['status'] = $filters['status'];
+            }
+
+            if (!empty($filters['tender_type'])) {
+                $query['type'] = $filters['tender_type'];
+            }
+
+            if (!empty($filters['province'])) {
+                $query['province'] = $filters['province'];
+            }
+
+            if (!empty($filters['organisation'])) {
+                $query['organisation'] = $filters['organisation'];
+            }
+
+            if (!empty($filters['page'])) {
+                $query['page'] = $filters['page'];
+            }
+
+            if (!empty($filters['limit'])) {
+                $query['limit'] = $filters['limit'];
+            }
+
+            $response = $this->client->request('GET', $url, [
+                'headers' => $headers,
+                'query' => $query,
+                'http_errors' => false
+            ]);
+
+            $statusCode = $response->getStatusCode();
+            if ($statusCode !== 200) {
+                log_message('error', "Treasury API search error: " . $response->getBody());
+                return ['data' => [], 'total' => 0];
+            }
+
+            $body = $response->getBody();
+            $result = json_decode($body, true);
+
+            return [
+                'data' => $result['data'] ?? [],
+                'total' => $result['total'] ?? count($result['data'] ?? []),
+                'page' => $result['page'] ?? 1,
+                'limit' => $result['limit'] ?? 20,
+            ];
+        } catch (\Exception $e) {
+            log_message('error', "Treasury API search exception: " . $e->getMessage());
+            return ['data' => [], 'total' => 0];
+        }
     }
 
     /**
