@@ -215,3 +215,9 @@ DEBUG - 2026-03-12 19:19:14 --> Session: Class initialized using 'CodeIgniter\Se
 ERROR - 2026-03-12 19:24:44 --> Treasury API request failed: "dateFrom and dateTo fields are required. "
 ERROR - 2026-03-12 19:24:45 --> Treasury API request failed: "dateFrom and dateTo fields are required. "
 DEBUG - 2026-03-12 19:24:45 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+ERROR - 2026-03-12 19:48:13 --> Treasury API request failed: "dateFrom and dateTo fields are required. "
+ERROR - 2026-03-12 19:48:15 --> Treasury API request failed: "dateFrom and dateTo fields are required. "
+DEBUG - 2026-03-12 19:48:15 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+ERROR - 2026-03-12 19:49:09 --> Treasury API request failed: "dateFrom and dateTo fields are required. "
+ERROR - 2026-03-12 19:49:11 --> Treasury API request failed: "dateFrom and dateTo fields are required. "
+DEBUG - 2026-03-12 19:49:11 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
