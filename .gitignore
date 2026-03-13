@@ -1,0 +1,87 @@
+# CodeIgniter 4
+# https://codeigniter.com/user_guide/installation/upgrade_4xx.html
+
+# Composer
+/vendor/
+
+# Environment
+.env
+.env.local
+.env.*.local
+
+# Writable Directory
+/writable/
+!/writable/index.html
+
+# Tests
+/tests/coverage/
+/tests/results/
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Logs
+*.log
+logs/
+writable/logs/
+
+# Cache
+writable/cache/
+!writable/cache/index.html
+
+# Sessions
+writable/session/
+!writable/session/index.html
+
+# Debugbar
+writable/debugbar/
+!writable/debugbar/index.html
+
+# Uploads (if you don't want to track uploaded files)
+writable/uploads/
+!writable/uploads/index.html
+
+# Database
+*.sqlite
+*.db
+
+# Temporary files
+tmp/
+temp/
+
+# Node.js (if using frontend build tools)
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Build directories
+build/
+dist/
+
+# PHP
+.phpunit.result.cache
+composer.lock
+
+# Archives
+*.zip
+*.tar.gz
+*.rar
+
+# Backup files
+*.bak
+*.backup
+*.old

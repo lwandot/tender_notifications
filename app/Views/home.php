@@ -12,6 +12,34 @@
     </div>
 </div>
 
+<!-- API Response Toggle -->
+<div class="container mt-4">
+    <div class="d-flex justify-content-end">
+        <button class="btn btn-outline-info btn-sm" type="button" data-bs-toggle="collapse" data-bs-target="#apiResponse" aria-expanded="false" aria-controls="apiResponse">
+            <i class="fas fa-code me-2"></i>Toggle API Response
+        </button>
+    </div>
+    <div class="collapse mt-3" id="apiResponse">
+        <div class="card">
+            <div class="card-header">
+                <h6 class="mb-0"><i class="fas fa-server me-2"></i>Raw API Response</h6>
+            </div>
+            <div class="card-body">
+                <div class="mb-3">
+                    <strong>Request URL:</strong>
+                    <div class="mt-2">
+                        <code class="bg-light p-2 rounded d-block text-break"><?= $requestUrl ?></code>
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <strong>Response Data:</strong>
+                </div>
+                <pre class="bg-light p-3 rounded"><code><?= json_encode($rawApiResponse, JSON_PRETTY_PRINT) ?></code></pre>
+            </div>
+        </div>
+    </div>
+</div>
+
 <div class="row mt-4">
     <!-- Filters Sidebar -->
     <div class="col-lg-3 mb-4">
@@ -77,6 +105,19 @@
                         <option value="services" <?= (isset($filters['tender_type']) && $filters['tender_type'] == 'services') ? 'selected' : '' ?>>Services</option>
                         <option value="works" <?= (isset($filters['tender_type']) && $filters['tender_type'] == 'works') ? 'selected' : '' ?>>Works</option>
                     </select>
+                </div>
+
+                <!-- Date Range -->
+                <div class="mb-3">
+                    <label for="dateFrom" class="form-label">From Date</label>
+                    <input type="date" class="form-control" id="dateFrom" name="dateFrom" 
+                           value="<?= isset($filters['dateFrom']) ? $filters['dateFrom'] : '' ?>">
+                </div>
+
+                <div class="mb-3">
+                    <label for="dateTo" class="form-label">To Date</label>
+                    <input type="date" class="form-control" id="dateTo" name="dateTo" 
+                           value="<?= isset($filters['dateTo']) ? $filters['dateTo'] : '' ?>">
                 </div>
 
                 <button type="submit" class="btn btn-primary w-100">

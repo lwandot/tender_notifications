@@ -52,7 +52,16 @@ class TenderModel
             }
         }
 
-        return $tenders;
+        // Build the request URL
+        $baseUrl = rtrim(getenv('TREASURY_API_URL') ?: 'https://ocds-api.etenders.gov.za/api/OCDSReleases', '/');
+        $queryString = http_build_query($params);
+        $requestUrl = $baseUrl . '?' . $queryString;
+
+        return [
+            'tenders' => $tenders,
+            'raw_response' => $result,
+            'request_url' => $requestUrl
+        ];
     }
 
     /**
@@ -139,7 +148,16 @@ class TenderModel
             }
         }
 
-        return $tenders;
+        // Build the request URL
+        $baseUrl = rtrim(getenv('TREASURY_API_URL') ?: 'https://ocds-api.etenders.gov.za/api/OCDSReleases', '/');
+        $queryString = http_build_query($searchFilters);
+        $requestUrl = $baseUrl . '?' . $queryString;
+
+        return [
+            'tenders' => $tenders,
+            'raw_response' => $result,
+            'request_url' => $requestUrl
+        ];
     }
 
     /**
