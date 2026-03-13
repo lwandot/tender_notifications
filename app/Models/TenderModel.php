@@ -32,8 +32,9 @@ class TenderModel
         $page = floor($offset / $limit) + 1;
 
         $params = [
-            'PageNumber' => $page,
-            'PageSize' => $limit,
+            'page' => $page,
+            'limit' => $limit,
+            'status' => 'active',
         ];
 
         if ($dateFrom !== null) {
@@ -108,8 +109,8 @@ class TenderModel
         $page = floor($offset / $limit) + 1;
 
         $searchFilters = [
-            'PageSize' => $limit,
-            'PageNumber' => $page,
+            'page' => $page,
+            'limit' => $limit,
             'status' => 'active',
         ];
 

@@ -32,8 +32,8 @@ class Home extends BaseController
             'category_id' => $this->request->getVar('category_id'),
             'tender_type' => $this->request->getVar('tender_type'),
             'search' => $this->request->getVar('search'),
-            'dateFrom' => $this->request->getVar('dateFrom'),
-            'dateTo' => $this->request->getVar('dateTo'),
+            'dateFrom' => $this->request->getVar('dateFrom') ?: $sevenDaysBack,
+            'dateTo' => $this->request->getVar('dateTo') ?: $sevenDaysFromNow,
         ];
 
         // Remove empty filters so we only apply filtering when user has selected something
@@ -50,7 +50,7 @@ class Home extends BaseController
             // Initial page load: show active tenders (no filters)
             $result = $tenderModel->getActiveTenders($perPage, $offset, $sevenDaysBack, $sevenDaysFromNow);
             $tenders = $result['tenders'];
-            $totalTenders = $tenderModel->countFilteredTenders([]);
+            $totalTenders = $tenderModel->countFilteredTenders(['dateFrom' => $sevenDaysBack, 'dateTo' => $sevenDaysFromNow]);
             $rawApiResponse = $result['raw_response'];
             $requestUrl = $result['request_url'];
         }
