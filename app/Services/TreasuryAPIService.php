@@ -64,18 +64,44 @@ class TreasuryAPIService
     }
 
     /**
-     * Fetch tender details from the API by release ID
+     * Fetch tender details from the API by OCID
      */
-    public function getTenderDetails($apiId)
+    public function getTenderDetails($ocid)
     {
-        $result = $this->request(['id' => $apiId]);
+        try {
+            $headers = [
+                'Accept' => 'application/json',
+            ];
 
-        // API returns releases array
-        if (!empty($result['releases'][0])) {
-            return $result['releases'][0]['tender'] ?? $result['releases'][0];
+            if ($this->apiKey) {
+                $headers['Authorization'] = 'Bearer ' . $this->apiKey;
+            }
+
+            // Construct URL with OCID in path: /api/OCDSReleases/release/{ocid}
+            $url = $this->apiBaseUrl . '/release/' . $ocid;
+
+            $response = $this->client->request('GET', $url, [
+                'headers' => $headers,
+                'http_errors' => false,
+            ]);
+
+            if ($response->getStatusCode() !== 200) {
+                log_message('error', 'Treasury API getTenderDetails request failed: ' . $response->getBody());
+                return null;
+            }
+
+            $result = json_decode($response->getBody(), true) ?: [];
+
+            // API returns a single release object, not an array
+            if (!empty($result)) {
+                return $result['tender'] ?? $result;
+            }
+
+            return null;
+        } catch (\Exception $e) {
+            log_message('error', 'Treasury API getTenderDetails request exception: ' . $e->getMessage());
+            return null;
         }
-
-        return null;
     }
 
     /**
