@@ -19,9 +19,14 @@ class Tender extends BaseController
             throw new \CodeIgniter\Exceptions\PageNotFoundException('Tender not found');
         }
 
+        // Build the API request URL
+        $apiBaseUrl = rtrim(getenv('TREASURY_API_URL') ?: 'https://ocds-api.etenders.gov.za/api/OCDSReleases', '/');
+        $requestUrl = $apiBaseUrl . '/release/' . $id;
+
         $data = [
             'title' => $tender['title'],
             'tender' => $tender,
+            'requestUrl' => $requestUrl,
         ];
 
         return view('tender/view', $data);

@@ -9,6 +9,36 @@
     </ol>
 </nav>
 
+<!-- API Response Toggle -->
+<div class="container-fluid mb-4">
+    <div class="d-flex justify-content-end">
+        <button class="btn btn-outline-info btn-sm" type="button" data-bs-toggle="collapse" data-bs-target="#apiResponse" aria-expanded="false" aria-controls="apiResponse">
+            <i class="fas fa-code me-2"></i>View API Request
+        </button>
+    </div>
+    <div class="collapse mt-3" id="apiResponse">
+        <div class="card">
+            <div class="card-header">
+                <h6 class="mb-0"><i class="fas fa-server me-2"></i>API Request Details</h6>
+            </div>
+            <div class="card-body">
+                <div class="mb-3">
+                    <strong>Request URL:</strong>
+                    <div class="mt-2">
+                        <code class="bg-light p-2 rounded d-block text-break"><?= $requestUrl ?></code>
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <strong>OCID:</strong>
+                    <div class="mt-2">
+                        <code class="bg-light p-2 rounded d-block text-break"><?= $tender['api_id'] ?? $tender['tender_number'] ?></code>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 <div class="row">
     <div class="col-lg-8">
         <!-- Tender Details -->

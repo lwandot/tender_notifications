@@ -22,7 +22,7 @@ $routes->get('/', 'Home::index');
 $routes->get('api/tender-types', 'Home::getTenderTypes');
 
 // Tender routes
-$routes->get('tender/view/(:num)', 'Tender::view/$1');
+$routes->get('tender/view/(:any)', 'Tender::view/$1');
 $routes->get('tender/search', 'Tender::search');
 
 // Authentication routes
