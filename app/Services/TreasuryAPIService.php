@@ -111,10 +111,13 @@ class TreasuryAPIService
     {
         // release may contain 'tender' sub-object
         if (isset($apiData['tender'])) {
+            $ocid = $apiData['ocid'] ?? null;
             $apiData = $apiData['tender'];
+            $apiData['tender']['ocid'] = $ocid; // Preserve OCID for reference
         }
 
         return [
+            'ocid' => $ocid ?? null,
             'tender_number' => $apiData['id'] ?? $apiData['tenderNumber'] ?? null,
             'title' => $apiData['title'] ?? null,
             'description' => $apiData['description'] ?? null,
@@ -131,7 +134,7 @@ class TreasuryAPIService
             'budget_estimate' => $apiData['value']['amount'] ?? null,
             'budget_currency' => $apiData['value']['currency'] ?? null,
             'status' => $apiData['status'] ?? 'active',
-            'api_id' => $apiData['id'] ?? null,
+            'tender_id' => $apiData['id'] ?? null,
             'documents' => $apiData['documents'] ?? [],
             'briefing_session' => $apiData['briefingSession'] ?? null,
             'contact_person' => $apiData['contactPerson'] ?? null,
@@ -221,7 +224,7 @@ class TreasuryAPIService
                 $mappedData = $this->mapTenderData($apiTender);
                 
                 // Check if tender exists
-                $existing = $tenderModel->where('api_id', $mappedData['api_id'])->first();
+                $existing = $tenderModel->where('tender_id', $mappedData['tender_id'])->first();
 
                 if ($existing) {
                     // Update existing

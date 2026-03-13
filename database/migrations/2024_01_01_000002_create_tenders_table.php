@@ -64,7 +64,7 @@ class CreateTendersTable extends Migration
                 'constraint' => [15, 2],
                 'null' => true,
             ],
-            'api_id' => [
+            'tender_id' => [
                 'type' => 'VARCHAR',
                 'constraint' => 100,
                 'null' => true,

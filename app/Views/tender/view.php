@@ -31,7 +31,7 @@
                 <div class="mb-3">
                     <strong>OCID:</strong>
                     <div class="mt-2">
-                        <code class="bg-light p-2 rounded d-block text-break"><?= $tender['api_id'] ?? $tender['tender_number'] ?></code>
+                        <code class="bg-light p-2 rounded d-block text-break"><?= $tender['ocid'] ?? $tender['ocid'] ?></code>
                     </div>
                 </div>
             </div>
