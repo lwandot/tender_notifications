@@ -32,9 +32,8 @@ class TenderModel
         $page = floor($offset / $limit) + 1;
 
         $params = [
-            'status' => 'active',
-            'PageSize' => $limit,
             'PageNumber' => $page,
+            'PageSize' => $limit,
         ];
 
         if ($dateFrom !== null) {
