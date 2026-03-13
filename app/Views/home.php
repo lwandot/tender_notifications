@@ -145,7 +145,7 @@
                         <div class="tender-header">
                             <div class="d-flex justify-content-between align-items-start mb-2">
                                 <h4 class="card-title mb-0">
-                                    <a href="/tender/view/<?= $tender['tender_number'] ?>" class="text-decoration-none">
+                                    <a href="/tender/view/<?= $tender['api_id'] ?>" class="text-decoration-none">
                                         <?= substr($tender['title'], 0, 60) . (strlen($tender['title']) > 60 ? '...' : '') ?>
                                     </a>
                                 </h4>
@@ -192,11 +192,11 @@
                             </div>
                         </div>
 
-                        <a href="/tender/view/<?= $tender['tender_number'] ?>" class="btn btn-primary">
+                        <a href="/tender/view/<?= $tender['api_id'] ?>" class="btn btn-primary">
                             <i class="fas fa-eye me-2"></i>View Details
                         </a>
                         <?php if (session()->has('user_id')): ?>
-                            <button class="btn btn-outline-success" onclick="subscribeTender(<?= $tender['tender_number'] ?>)">
+                            <button class="btn btn-outline-success" onclick="subscribeTender(<?= $tender['api_id'] ?>)">
                                 <i class="fas fa-bell me-2"></i>Subscribe to Updates
                             </button>
                         <?php else: ?>

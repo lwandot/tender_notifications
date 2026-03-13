@@ -36,7 +36,7 @@ class SyncTendersCommand extends \CodeIgniter\CLI\BaseCommand
 
         $pushService = new PushNotificationService();
         foreach ($newTenders as $tender) {
-            $pushService->notifySubscribersAboutTender($tender['id']);
+            $pushService->notifySubscribersAboutTender($tender['api_id']);
         }
 
         $this->write("Notified subscribers about {$result['synced']} new tenders", 'green');
