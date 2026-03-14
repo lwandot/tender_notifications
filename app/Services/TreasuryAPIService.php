@@ -112,6 +112,7 @@ class TreasuryAPIService
         // release may contain 'tender' sub-object
         if (isset($apiData['tender'])) {
             $ocid = $apiData['ocid'] ?? null;
+            $procuringEntity = $apiData['procuringEntity']['name'] ?? null;
             $apiData = $apiData['tender'];
             $apiData['tender']['ocid'] = $ocid; // Preserve OCID for reference
         }
@@ -120,6 +121,7 @@ class TreasuryAPIService
             'ocid' => $ocid ?? null,
             'tender_number' => $apiData['id'] ?? $apiData['tenderNumber'] ?? null,
             'title' => $apiData['title'] ?? null,
+            'procuring_entity' => $procuringEntity ?? null,
             'description' => $apiData['description'] ?? null,
             'category' => $apiData['category'] ?? null,
             'province' => $apiData['province'] ?? null,

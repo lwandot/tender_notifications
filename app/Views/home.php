@@ -111,9 +111,19 @@
                         $provinceName = $tender['province']['name'] ?? $tender['province'] ?? 'Unknown';
                         $publishedAt = isset($tender['published_date']) ? date('j M Y', strtotime($tender['published_date'])) : 'Unknown';
                         $closingAt = isset($tender['closing_date']) ? date('j M Y', strtotime($tender['closing_date'])) : 'TBD';
-                        $tenderTitle = $tender['title'] ?? 'Untitled Tender';
+                        $tenderTitle = $tender['organ_of_state'] ?? 'Untitled Organ of State';
+                        $procurementEntity = $tender['procuring_entity']['name'] ?? 'Untitled Tender'; 
                         $tenderNumber = $tender['tender_number'] ?? ($tender['ocid'] ?? 'N/A');
                         $tenderStatus = isset($tender['status']) ? strtolower($tender['status']) : 'active';
+                        $statusClass = match($tenderStatus) {
+                            'active' => 'bg-green-500 text-white',
+                            'closed' => 'bg-red-500 text-white',
+                            'cancelled' => 'bg-gray-500 text-white',
+                            default => 'bg-blue-500 text-white',
+                        };
+                        $description = $tender['description'] ?? '';
+                        $categories = is_array($tender['category']) ? implode(', ', $tender['category']) : ($tender['category'] ?? 'N/A');
+                        $daysLeft = isset($tender['closing_date']) ? ceil((strtotime($tender['closing_date']) - time()) / (60 * 60 * 24)) : 'N/A';
                         ?>
 
                         <div class="group relative flex flex-col md:flex-row md:items-center gap-6 bg-white dark:bg-slate-900 p-6 rounded-xl border border-slate-200 dark:border-slate-800 hover:border-primary/50 transition-all shadow-sm hover:shadow-md">
@@ -124,10 +134,11 @@
                                 <div class="flex flex-wrap items-center gap-2 mb-1">
                                     <span class="text-xs font-bold uppercase tracking-wider text-primary bg-primary/10 px-2 py-0.5 rounded"><?= esc($tenderNumber) ?></span>
                                     <span class="text-xs font-medium text-slate-400">Published <?= esc($publishedAt) ?></span>
+                                    <span class="text-xs font-bold uppercase tracking-wider px-2 py-0.5 rounded <?= $statusClass ?>"><?= esc(ucfirst($tenderStatus)) ?></span>
                                 </div>
                                 <h3 class="text-lg font-bold text-slate-900 dark:text-white group-hover:text-primary transition-colors">
                                     <a href="/tender/view/<?= esc($tender['ocid'] ?? '') ?>">
-                                        <?= esc(mb_strimwidth($tenderTitle, 0, 80, '...')) ?>
+                                        <?= esc(mb_strimwidth($procurementEntity, 0, 80, '...')) ?>
                                     </a>
                                 </h3>
                                 <div class="flex flex-wrap items-center gap-x-6 gap-y-2 text-sm text-slate-600 dark:text-slate-400">
@@ -143,7 +154,24 @@
                                         <span class="material-symbols-outlined text-base">event</span>
                                         <span>Closing: <?= esc($closingAt) ?></span>
                                     </div>
+                                    <div class="flex items-center gap-1.5">
+                                        <span class="material-symbols-outlined text-base">folder</span>
+                                        <span>Category: <?= esc($categories) ?></span>
+                                    </div>
+                                    <div class="flex items-center gap-1.5">
+                                        <span class="material-symbols-outlined text-base">schedule</span>
+                                        <span>Start: <?= esc($publishedAt) ?></span>
+                                    </div>
+                                    <div class="flex items-center gap-1.5">
+                                        <span class="material-symbols-outlined text-base">timer</span>
+                                        <span>Days left: <?= esc($daysLeft) ?></span>
+                                    </div>
                                 </div>
+                                <?php if (!empty($description)): ?>
+                                <div class="mt-2 text-sm text-slate-500 dark:text-slate-400">
+                                    <p class="line-clamp-2"><?= esc(mb_strimwidth($description, 0, 150, '...')) ?></p>
+                                </div>
+                                <?php endif; ?>
                             </div>
                             <div class="flex items-center gap-4">
                                 <button class="p-2 text-slate-400 hover:text-primary rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800" aria-label="Bookmark">
