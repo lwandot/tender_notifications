@@ -12,7 +12,7 @@
     <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8">
         <div class="flex flex-col gap-1">
             <h1 class="text-slate-900 dark:text-slate-100 text-3xl md:text-4xl font-black leading-tight tracking-tight">
-                <?= esc($tender['title'] ?? 'Untitled Tender') ?>
+                <?= esc($tender['procuring_entity']['name'] ?? 'Untitled Tender') ?>
             </h1>
             <p class="text-slate-500 dark:text-slate-400 text-lg">
                 Tender Reference: <span class="font-semibold"><?= esc($tender['tender_number'] ?? ($tender['ocid'] ?? 'N/A')) ?></span>
@@ -58,7 +58,7 @@
                     </div>
                     <div class="space-y-1">
                         <p class="text-xs uppercase tracking-wider text-slate-400 font-bold">Province</p>
-                        <p class="text-slate-900 dark:text-slate-100 font-medium"><?= esc($tender['province']['name'] ?? 'N/A') ?></p>
+                        <p class="text-slate-900 dark:text-slate-100 font-medium"><?= esc($tender['province'] ?? 'N/A') ?></p>
                     </div>
                     <div class="space-y-1">
                         <p class="text-xs uppercase tracking-wider text-slate-400 font-bold">Date Published</p>
@@ -92,15 +92,15 @@
                         <div class="space-y-2 text-sm">
                             <div class="flex justify-between">
                                 <span class="text-slate-500">Contact Person:</span>
-                                <span class="font-medium"><?= esc($tender['technical_contact']['name'] ?? 'TBA') ?></span>
+                                <span class="font-medium"><?= esc($tender['contactPerson']['name'] ?? 'TBA') ?></span>
                             </div>
                             <div class="flex justify-between">
                                 <span class="text-slate-500">Email:</span>
-                                <span class="font-medium"><a class="text-primary hover:underline" href="mailto:<?= esc($tender['technical_contact']['email'] ?? 'info@gov.za') ?>"><?= esc($tender['technical_contact']['email'] ?? 'info@gov.za') ?></a></span>
+                                <span class="font-medium"><a class="text-primary hover:underline" href="mailto:<?= esc($tender['contactPerson']['email'] ?? 'info@gov.za') ?>"><?= esc($tender['contactPerson']['email'] ?? 'N/A') ?></a></span>
                             </div>
                             <div class="flex justify-between">
                                 <span class="text-slate-500">Telephone:</span>
-                                <span class="font-medium"><?= esc($tender['technical_contact']['phone'] ?? 'N/A') ?></span>
+                                <span class="font-medium"><?= esc($tender['contactPerson']['telephoneNumber'] ?? 'N/A') ?></span>
                             </div>
                         </div>
                     </div>
@@ -112,15 +112,15 @@
                         <div class="space-y-2 text-sm">
                             <div class="flex justify-between">
                                 <span class="text-slate-500">Contact Person:</span>
-                                <span class="font-medium"><?= esc($tender['scm_contact']['name'] ?? 'TBA') ?></span>
+                                <span class="font-medium"><?= esc($tender['contactPerson']['name'] ?? 'TBA') ?></span>
                             </div>
                             <div class="flex justify-between">
                                 <span class="text-slate-500">Email:</span>
-                                <span class="font-medium"><a class="text-primary hover:underline" href="mailto:<?= esc($tender['scm_contact']['email'] ?? 'scm@gov.za') ?>"><?= esc($tender['scm_contact']['email'] ?? 'scm@gov.za') ?></a></span>
+                                <span class="font-medium"><a class="text-primary hover:underline" href="mailto:<?= esc($tender['contactPerson']['email'] ?? 'TBA') ?>"><?= esc($tender['contactPerson']['email'] ?? 'TBA') ?></a></span>
                             </div>
                             <div class="flex justify-between">
                                 <span class="text-slate-500">Telephone:</span>
-                                <span class="font-medium"><?= esc($tender['scm_contact']['phone'] ?? 'N/A') ?></span>
+                                <span class="font-medium"><?= esc($tender['contactPerson']['telephoneNumber'] ?? 'N/A') ?></span>
                             </div>
                         </div>
                     </div>

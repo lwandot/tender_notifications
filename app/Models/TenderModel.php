@@ -82,11 +82,11 @@ class TenderModel
             $tender['enquiries'] = $apiData['enquiries'] ?? [];
             $tender['briefing_sessions'] = $apiData['briefingSessions'] ?? [];
             $tender['documents'] = $apiData['documents'] ?? [];
-            $tender['categories'] = $apiData['categories'] ?? [];
-            
-            // Add organ of state and province info from API
-            $tender['organ_of_state'] = $apiData['organisingEntity'] ?? null;
-            $tender['province'] = $apiData['province'] ?? null;
+            $tender['procuringEntity']['name'] ?? null;
+            $tender['contactPerson'] = $apiData['contactPerson'] ?? [];
+            $tender['procurementMethodDetails'] = $apiData['procurementMethodDetails'] ?? null;
+            $tender['tenderPeriod'] = $apiData['tenderPeriod'] ?? [];
+
         }
 
         return $tender;

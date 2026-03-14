@@ -113,12 +113,15 @@ class TreasuryAPIService
         if (isset($apiData['tender'])) {
             $ocid = $apiData['ocid'] ?? null;
             $procuringEntity = $apiData['procuringEntity']['name'] ?? null;
+            $contactPerson = $apiData['contactPerson'] ?? null;
             $apiData = $apiData['tender'];
             $apiData['tender']['ocid'] = $ocid; // Preserve OCID for reference
+            $apiData['tender']['contactPerson'] = $contactPerson; // Preserve contact
         }
 
         return [
             'ocid' => $ocid ?? null,
+            'contactPerson' => $contactPerson ?? null,
             'tender_number' => $apiData['id'] ?? $apiData['tenderNumber'] ?? null,
             'title' => $apiData['title'] ?? null,
             'procuring_entity' => $procuringEntity ?? null,
