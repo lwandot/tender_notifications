@@ -2,49 +2,74 @@
 
 <?= $this->section('content') ?>
 
-<div class="container mt-5">
-    <div class="row justify-content-center">
-        <div class="col-md-6">
-            <div class="card">
-                <div class="card-body p-5">
-                    <h2 class="card-title mb-4 text-center">
-                        <i class="fas fa-sign-in-alt me-2"></i>Login
-                    </h2>
+<div class="flex flex-1 flex-col md:flex-row w-full">
+    <!-- Main Content Area -->
+    <section class="flex-1 p-6 md:p-10 space-y-8">
+        <div class="max-w-md mx-auto">
+            <div class="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 p-8 shadow-sm">
+                <div class="text-center mb-8">
+                    <div class="bg-primary text-white p-3 rounded-lg flex items-center justify-center w-fit mx-auto mb-4">
+                        <span class="material-symbols-outlined text-2xl">login</span>
+                    </div>
+                    <h1 class="text-2xl font-bold text-slate-900 dark:text-white">Welcome Back</h1>
+                    <p class="text-slate-500 dark:text-slate-400 mt-2">Sign in to your account</p>
+                </div>
 
-                    <?php if (isset($error)): ?>
-                        <div class="alert alert-danger">
-                            <?= $error ?>
-                        </div>
-                    <?php endif; ?>
+                <?php if (isset($error)): ?>
+                    <div class="rounded-lg bg-rose-50 border border-rose-200 px-4 py-3 text-rose-800 mb-6">
+                        <?= esc($error) ?>
+                    </div>
+                <?php endif; ?>
 
-                    <form method="post" action="/auth/login">
-                        <?= csrf_field() ?>
+                <form method="post" action="/auth/login" class="space-y-6">
+                    <?= csrf_field() ?>
 
-                        <div class="mb-3">
-                            <label for="email" class="form-label">Email Address</label>
-                            <input type="email" class="form-control" id="email" name="email" required>
-                        </div>
+                    <div>
+                        <label for="email" class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
+                            Email Address
+                        </label>
+                        <input
+                            type="email"
+                            id="email"
+                            name="email"
+                            required
+                            class="block w-full px-4 py-3 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent text-slate-900 dark:text-white placeholder:text-slate-400"
+                            placeholder="Enter your email"
+                        >
+                    </div>
 
-                        <div class="mb-3">
-                            <label for="password" class="form-label">Password</label>
-                            <input type="password" class="form-control" id="password" name="password" required>
-                        </div>
+                    <div>
+                        <label for="password" class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
+                            Password
+                        </label>
+                        <input
+                            type="password"
+                            id="password"
+                            name="password"
+                            required
+                            class="block w-full px-4 py-3 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent text-slate-900 dark:text-white placeholder:text-slate-400"
+                            placeholder="Enter your password"
+                        >
+                    </div>
 
-                        <button type="submit" class="btn btn-primary w-100 mb-3">
-                            <i class="fas fa-sign-in-alt me-2"></i>Login
-                        </button>
-                    </form>
+                    <button
+                        type="submit"
+                        class="w-full bg-primary text-white py-3 px-4 rounded-lg font-bold hover:bg-primary/90 transition-colors flex items-center justify-center gap-2"
+                    >
+                        <span class="material-symbols-outlined text-sm">login</span>
+                        Sign In
+                    </button>
+                </form>
 
-                    <hr>
-
-                    <p class="text-center mb-0">
-                        Don't have an account? 
-                        <a href="/auth/register">Register here</a>
+                <div class="mt-8 pt-6 border-t border-slate-100 dark:border-slate-800">
+                    <p class="text-center text-slate-500 dark:text-slate-400">
+                        Don't have an account?
+                        <a href="/auth/register" class="text-primary hover:underline font-medium">Create one here</a>
                     </p>
                 </div>
             </div>
         </div>
-    </div>
+    </section>
 </div>
 
 <?= $this->endSection() ?>

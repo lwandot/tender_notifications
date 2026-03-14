@@ -2,78 +2,104 @@
 
 <?= $this->section('content') ?>
 
-<div class="page-header">
-    <div class="container">
-        <h1 class="mb-0">
-            <i class="fas fa-bell me-2"></i>Create New Subscription
-        </h1>
-    </div>
-</div>
+<div class="flex flex-1 flex-col md:flex-row w-full">
+    <!-- Main Content Area -->
+    <section class="flex-1 p-6 md:p-10 space-y-8">
+        <div class="max-w-2xl mx-auto">
+            <div class="mb-8">
+                <h1 class="text-3xl font-bold text-slate-900 dark:text-white mb-2">Create New Subscription</h1>
+                <p class="text-slate-500 dark:text-slate-400">Get notified when new tenders match your criteria</p>
+            </div>
 
-<div class="container mt-4">
-    <div class="row justify-content-center">
-        <div class="col-md-8">
-            <div class="card">
-                <div class="card-body p-5">
-                    <form method="post" action="/subscription/create">
-                        <?= csrf_field() ?>
+            <div class="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 p-8 shadow-sm">
+                <form method="post" action="/subscription/create" class="space-y-6">
+                    <?= csrf_field() ?>
 
-                        <div class="mb-4">
-                            <label for="filterType" class="form-label">Filter Type</label>
-                            <select class="form-select" id="filterType" name="filter_type" required>
-                                <option value="">Select an option...</option>
-                                <option value="category">By Category</option>
-                                <option value="province">By Province</option>
-                                <option value="organ_of_state">By Organ of State</option>
-                            </select>
-                            <small class="form-text text-muted">
-                                Choose what type of tenders you want to be notified about
-                            </small>
-                        </div>
+                    <div>
+                        <label for="filterType" class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
+                            Filter Type
+                        </label>
+                        <select
+                            id="filterType"
+                            name="filter_type"
+                            required
+                            class="block w-full px-4 py-3 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent text-slate-900 dark:text-white"
+                        >
+                            <option value="">Select an option...</option>
+                            <option value="category">By Category</option>
+                            <option value="province">By Province</option>
+                            <option value="organ_of_state">By Organ of State</option>
+                        </select>
+                        <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">
+                            Choose what type of tenders you want to be notified about
+                        </p>
+                    </div>
 
-                        <div class="mb-4" id="filterValueGroup" style="display:none;">
-                            <label for="filterValue" class="form-label" id="filterValueLabel"></label>
-                            <select class="form-select" id="filterValue" name="filter_value">
-                                <option value="">Select...</option>
-                            </select>
-                        </div>
+                    <div id="filterValueGroup" class="hidden">
+                        <label for="filterValue" id="filterValueLabel" class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2"></label>
+                        <select
+                            id="filterValue"
+                            name="filter_value"
+                            class="block w-full px-4 py-3 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent text-slate-900 dark:text-white"
+                        >
+                            <option value="">Select...</option>
+                        </select>
+                    </div>
 
-                        <div class="mb-4">
-                            <label for="notificationType" class="form-label">Notification Type</label>
-                            <select class="form-select" id="notificationType" name="notification_type" required>
-                                <option value="">Select...</option>
-                                <option value="email">Email Notifications</option>
-                                <option value="push">Push Notifications</option>
-                                <option value="sms">SMS Notifications</option>
-                            </select>
-                            <small class="form-text text-muted">
-                                Choose how you'd like to receive notifications
-                            </small>
-                        </div>
+                    <div>
+                        <label for="notificationType" class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
+                            Notification Type
+                        </label>
+                        <select
+                            id="notificationType"
+                            name="notification_type"
+                            required
+                            class="block w-full px-4 py-3 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent text-slate-900 dark:text-white"
+                        >
+                            <option value="">Select...</option>
+                            <option value="email">Email Notifications</option>
+                            <option value="push">Push Notifications</option>
+                            <option value="sms">SMS Notifications</option>
+                        </select>
+                        <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">
+                            Choose how you'd like to receive notifications
+                        </p>
+                    </div>
 
-                        <div class="mb-4">
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" value="true" 
-                                       id="isActive" name="is_active" checked>
-                                <label class="form-check-label" for="isActive">
-                                    Activate this subscription immediately
-                                </label>
-                            </div>
-                        </div>
+                    <div class="flex items-start gap-3">
+                        <input
+                            type="checkbox"
+                            id="isActive"
+                            name="is_active"
+                            value="true"
+                            checked
+                            class="mt-1 h-4 w-4 text-primary border-slate-200 dark:border-slate-800 rounded focus:ring-primary"
+                        >
+                        <label for="isActive" class="text-sm text-slate-700 dark:text-slate-300">
+                            Activate this subscription immediately
+                        </label>
+                    </div>
 
-                        <div class="d-grid gap-2">
-                            <button type="submit" class="btn btn-primary">
-                                <i class="fas fa-check-circle me-2"></i>Create Subscription
-                            </button>
-                            <a href="/subscription" class="btn btn-outline-secondary">
-                                <i class="fas fa-times me-2"></i>Cancel
-                            </a>
-                        </div>
-                    </form>
-                </div>
+                    <div class="flex gap-4 pt-4">
+                        <button
+                            type="submit"
+                            class="flex-1 bg-primary text-white py-3 px-4 rounded-lg font-bold hover:bg-primary/90 transition-colors flex items-center justify-center gap-2"
+                        >
+                            <span class="material-symbols-outlined text-sm">check_circle</span>
+                            Create Subscription
+                        </button>
+                        <a
+                            href="/subscription"
+                            class="flex-1 bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-slate-100 py-3 px-4 rounded-lg font-bold hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors flex items-center justify-center gap-2"
+                        >
+                            <span class="material-symbols-outlined text-sm">cancel</span>
+                            Cancel
+                        </a>
+                    </div>
+                </form>
             </div>
         </div>
-    </div>
+    </section>
 </div>
 
 <script>
@@ -84,16 +110,16 @@ document.getElementById('filterType').addEventListener('change', function() {
     const value = this.value;
 
     if (!value) {
-        filterGroup.style.display = 'none';
+        filterGroup.classList.add('hidden');
         filterValue.innerHTML = '<option value="">Select...</option>';
         return;
     }
 
-    filterGroup.style.display = 'block';
+    filterGroup.classList.remove('hidden');
 
     // Populate filter options based on selected type
     let options = '<option value="">Select...</option>';
-    
+
     if (value === 'category') {
         filterValueLabel.textContent = 'Select Category';
         // These should be populated from the server

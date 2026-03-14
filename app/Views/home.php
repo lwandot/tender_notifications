@@ -2,254 +2,169 @@
 
 <?= $this->section('content') ?>
 
-<!-- Hero Section -->
-<div class="hero-section">
-    <div class="container">
-        <h1 class="mb-4">
-            <i class="fas fa-search me-3"></i>Government Tenders
-        </h1>
-        <p class="lead mb-0">Search and browse active government tenders across provinces and state organs</p>
-    </div>
-</div>
+<div class="flex flex-1 flex-col md:flex-row w-full">
+    <!-- Sidebar / Filters -->
+    <aside class="w-full md:w-72 border-r border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-6 space-y-8 h-full">
+        <div>
+            <h1 class="text-slate-900 dark:text-white text-lg font-bold mb-1">Filters</h1>
+            <p class="text-slate-500 dark:text-slate-400 text-sm">Refine your tender search</p>
+        </div>
 
-<!-- API Response Toggle -->
-<div class="container mt-4">
-    <div class="d-flex justify-content-end">
-        <button class="btn btn-outline-info btn-sm" type="button" data-bs-toggle="collapse" data-bs-target="#apiResponse" aria-expanded="false" aria-controls="apiResponse">
-            <i class="fas fa-code me-2"></i>Toggle API Response
-        </button>
-    </div>
-    <div class="collapse mt-3" id="apiResponse">
-        <div class="card">
-            <div class="card-header">
-                <h6 class="mb-0"><i class="fas fa-server me-2"></i>Raw API Response</h6>
+        <nav class="space-y-2">
+            <div class="group flex items-center justify-between px-3 py-2.5 rounded-lg bg-primary/10 text-primary cursor-pointer">
+                <div class="flex items-center gap-3">
+                    <span class="material-symbols-outlined">folder</span>
+                    <span class="text-sm font-semibold">Category</span>
+                </div>
+                <span class="material-symbols-outlined text-sm">expand_more</span>
             </div>
-            <div class="card-body">
-                <div class="mb-3">
-                    <strong>Request URL:</strong>
-                    <div class="mt-2">
-                        <code class="bg-light p-2 rounded d-block text-break"><?= $requestUrl ?></code>
-                    </div>
+            <div class="group flex items-center justify-between px-3 py-2.5 rounded-lg text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 cursor-pointer">
+                <div class="flex items-center gap-3">
+                    <span class="material-symbols-outlined">account_balance</span>
+                    <span class="text-sm font-medium">Organ of State</span>
                 </div>
-                <div class="mb-3">
-                    <strong>Response Data:</strong>
+                <span class="material-symbols-outlined text-sm">chevron_right</span>
+            </div>
+            <div class="group flex items-center justify-between px-3 py-2.5 rounded-lg text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 cursor-pointer">
+                <div class="flex items-center gap-3">
+                    <span class="material-symbols-outlined">map</span>
+                    <span class="text-sm font-medium">Province</span>
                 </div>
-                <pre class="bg-light p-3 rounded"><code><?= json_encode($rawApiResponse, JSON_PRETTY_PRINT) ?></code></pre>
+                <span class="material-symbols-outlined text-sm">chevron_right</span>
+            </div>
+        </nav>
+
+        <div class="pt-6 border-t border-slate-100 dark:border-slate-800">
+            <h3 class="text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider mb-4">Saved Searches</h3>
+            <div class="space-y-3">
+                <div class="flex items-center gap-2 text-sm text-slate-600 dark:text-slate-400 hover:text-primary cursor-pointer">
+                    <span class="material-symbols-outlined text-xs">history</span>
+                    <span>Medical Supplies 2024</span>
+                </div>
+                <div class="flex items-center gap-2 text-sm text-slate-600 dark:text-slate-400 hover:text-primary cursor-pointer">
+                    <span class="material-symbols-outlined text-xs">history</span>
+                    <span>IT Infrastructure</span>
+                </div>
             </div>
         </div>
-    </div>
-</div>
-<div class="row mt-4">
-    <!-- Filters Sidebar -->
-    <div class="col-lg-3 mb-4">
-        <div class="filter-section">
-            <h5 class="mb-4"><i class="fas fa-filter me-2"></i>Filters</h5>
-            
-            <form method="get" action="/" class="filter-form">
-                <!-- Search -->
-                <div class="mb-3">
-                    <label for="search" class="form-label">Search Tenders</label>
-                    <input type="text" class="form-control search-input" id="search" name="search" 
-                           placeholder="Tender number, title..." value="<?= isset($filters['search']) ? $filters['search'] : '' ?>">
+    </aside>
+
+    <!-- Main Content Area -->
+    <section class="flex-1 p-6 md:p-10 space-y-8">
+        <!-- Search Bar -->
+        <form method="get" action="/" class="max-w-3xl">
+            <label class="relative block group">
+                <div class="absolute inset-y-0 left-0 flex items-center pl-4 pointer-events-none text-slate-400 group-focus-within:text-primary">
+                    <span class="material-symbols-outlined">search</span>
                 </div>
+                <input
+                    name="search"
+                    id="searchInput"
+                    type="text"
+                    value="<?= isset($filters['search']) ? esc($filters['search']) : '' ?>"
+                    placeholder="Search tenders by number, title or keyword"
+                    class="block w-full h-14 pl-12 pr-4 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl focus:ring-2 focus:ring-primary focus:border-transparent text-slate-900 dark:text-white placeholder:text-slate-400 shadow-sm"
+                />
+            </label>
+        </form>
 
-                <!-- Province -->
-                <div class="mb-3">
-                    <label for="province" class="form-label">Province</label>
-                    <select class="form-select" id="province" name="province_id">
-                        <option value="">All Provinces</option>
-                        <?php foreach ($provinces as $province): ?>
-                            <option value="<?= $province['id'] ?>" 
-                                    <?= (isset($filters['province_id']) && $filters['province_id'] == $province['id']) ? 'selected' : '' ?>>
-                                <?= $province['name'] ?>
-                            </option>
-                        <?php endforeach; ?>
-                    </select>
+        <!-- Content List -->
+        <div class="space-y-6">
+            <div class="flex items-center justify-between">
+                <h2 class="text-2xl font-bold text-slate-900 dark:text-white">Active Tenders</h2>
+                <div class="flex items-center gap-2 text-sm text-slate-500">
+                    <span>Showing <?= $total ?> results</span>
+                    <span class="material-symbols-outlined">sort</span>
                 </div>
+            </div>
 
-                <!-- Organ of State -->
-                <div class="mb-3">
-                    <label for="organ" class="form-label">Organ of State</label>
-                    <select class="form-select" id="organ" name="organ_of_state_id">
-                        <option value="">All Organs</option>
-                        <?php foreach ($organs as $organ): ?>
-                            <option value="<?= $organ['id'] ?>"
-                                    <?= (isset($filters['organ_of_state_id']) && $filters['organ_of_state_id'] == $organ['id']) ? 'selected' : '' ?>>
-                                <?= $organ['name'] ?>
-                            </option>
-                        <?php endforeach; ?>
-                    </select>
-                </div>
+            <?php if (!empty($tenders)): ?>
+                <div class="grid gap-4">
+                    <?php foreach ($tenders as $tender): ?>
+                        <?php
+                        $organName = $tender['organ_of_state']['name'] ?? $tender['organ_of_state'] ?? 'Unknown';
+                        $provinceName = $tender['province']['name'] ?? $tender['province'] ?? 'Unknown';
+                        $publishedAt = isset($tender['published_date']) ? date('j M Y', strtotime($tender['published_date'])) : 'Unknown';
+                        $closingAt = isset($tender['closing_date']) ? date('j M Y', strtotime($tender['closing_date'])) : 'TBD';
+                        $tenderTitle = $tender['title'] ?? 'Untitled Tender';
+                        $tenderNumber = $tender['tender_number'] ?? ($tender['ocid'] ?? 'N/A');
+                        $tenderStatus = isset($tender['status']) ? strtolower($tender['status']) : 'active';
+                        ?>
 
-                <!-- Category -->
-                <div class="mb-3">
-                    <label for="category" class="form-label">Category</label>
-                    <select class="form-select" id="category" name="category_id">
-                        <option value="">All Categories</option>
-                        <?php foreach ($categories as $category): ?>
-                            <option value="<?= $category['id'] ?>"
-                                    <?= (isset($filters['category_id']) && $filters['category_id'] == $category['id']) ? 'selected' : '' ?>>
-                                <?= $category['name'] ?>
-                            </option>
-                        <?php endforeach; ?>
-                    </select>
-                </div>
-
-                <!-- Tender Type -->
-                <div class="mb-3">
-                    <label for="type" class="form-label">Tender Type</label>
-                    <select class="form-select" id="type" name="tender_type">
-                        <option value="">All Types</option>
-                        <option value="goods" <?= (isset($filters['tender_type']) && $filters['tender_type'] == 'goods') ? 'selected' : '' ?>>Goods</option>
-                        <option value="services" <?= (isset($filters['tender_type']) && $filters['tender_type'] == 'services') ? 'selected' : '' ?>>Services</option>
-                        <option value="works" <?= (isset($filters['tender_type']) && $filters['tender_type'] == 'works') ? 'selected' : '' ?>>Works</option>
-                    </select>
-                </div>
-
-                <!-- Date Range -->
-                <div class="mb-3">
-                    <label for="dateFrom" class="form-label">From Date</label>
-                    <input type="date" class="form-control" id="dateFrom" name="dateFrom" 
-                           value="<?= isset($filters['dateFrom']) ? $filters['dateFrom'] : '' ?>">
-                </div>
-
-                <div class="mb-3">
-                    <label for="dateTo" class="form-label">To Date</label>
-                    <input type="date" class="form-control" id="dateTo" name="dateTo" 
-                           value="<?= isset($filters['dateTo']) ? $filters['dateTo'] : '' ?>">
-                </div>
-
-                <button type="submit" class="btn btn-primary w-100">
-                    <i class="fas fa-search me-2"></i>Search
-                </button>
-                <a href="/" class="btn btn-secondary w-100 mt-2">
-                    <i class="fas fa-redo me-2"></i>Reset
-                </a>
-            </form>
-        </div>
-    </div>
-
-    <!-- Tenders List -->
-    <div class="col-lg-9">
-        <div class="d-flex justify-content-between align-items-center mb-4">
-            <h3>
-                <i class="fas fa-list me-2"></i>
-                <?= $total ?> Active Tender<?= $total != 1 ? 's' : '' ?>
-            </h3>
-        </div>
-
-        <?php if (!empty($tenders)): ?>
-            <?php foreach ($tenders as $tender): ?>
-                <div class="card tender-card">
-                    <div class="card-body">
-                        <div class="tender-header">
-                            <div class="d-flex justify-content-between align-items-start mb-2">
-                                <h4 class="card-title mb-0">
-                                    <a href="/tender/view/<?= $tender['ocid'] ?>" class="text-decoration-none">
-                                        <?= substr($tender['title'], 0, 60) . (strlen($tender['title']) > 60 ? '...' : '') ?>
+                        <div class="group relative flex flex-col md:flex-row md:items-center gap-6 bg-white dark:bg-slate-900 p-6 rounded-xl border border-slate-200 dark:border-slate-800 hover:border-primary/50 transition-all shadow-sm hover:shadow-md">
+                            <div class="flex h-14 w-14 items-center justify-center rounded-xl bg-primary/10 text-primary shrink-0">
+                                <span class="material-symbols-outlined text-2xl">description</span>
+                            </div>
+                            <div class="flex-1 space-y-1">
+                                <div class="flex flex-wrap items-center gap-2 mb-1">
+                                    <span class="text-xs font-bold uppercase tracking-wider text-primary bg-primary/10 px-2 py-0.5 rounded"><?= esc($tenderNumber) ?></span>
+                                    <span class="text-xs font-medium text-slate-400">Published <?= esc($publishedAt) ?></span>
+                                </div>
+                                <h3 class="text-lg font-bold text-slate-900 dark:text-white group-hover:text-primary transition-colors">
+                                    <a href="/tender/view/<?= esc($tender['ocid'] ?? '') ?>">
+                                        <?= esc(mb_strimwidth($tenderTitle, 0, 80, '...')) ?>
                                     </a>
-                                </h4>
-                                <span class="status-badge status-<?= $tender['status'] ?>">
-                                    <?= ucfirst($tender['status']) ?>
-                                </span>
+                                </h3>
+                                <div class="flex flex-wrap items-center gap-x-6 gap-y-2 text-sm text-slate-600 dark:text-slate-400">
+                                    <div class="flex items-center gap-1.5">
+                                        <span class="material-symbols-outlined text-base">account_balance</span>
+                                        <span><?= esc($organName) ?></span>
+                                    </div>
+                                    <div class="flex items-center gap-1.5">
+                                        <span class="material-symbols-outlined text-base">location_on</span>
+                                        <span><?= esc($provinceName) ?></span>
+                                    </div>
+                                    <div class="flex items-center gap-1.5">
+                                        <span class="material-symbols-outlined text-base">event</span>
+                                        <span>Closing: <?= esc($closingAt) ?></span>
+                                    </div>
+                                </div>
                             </div>
-                            <p class="text-muted mb-0 small">
-                                <strong>Tender #:</strong> <?= $tender['tender_number'] ?>
-                            </p>
-                        </div>
-
-                        <div class="row mb-3">
-                            <div class="col-md-6">
-                                <p class="mb-2">
-                                    <i class="fas fa-building text-primary me-2"></i>
-                                    <strong>Organ:</strong> 
-                                </p>
-                            </div>
-                            <div class="col-md-6">
-                                <p class="mb-2">
-                                    <i class="fas fa-map-marker-alt text-primary me-2"></i>
-                                    <strong>Province:</strong>
-                                </p>
-                            </div>
-                        </div>
-
-                        <p class="card-text text-muted">
-                            <?= substr($tender['description'], 0, 150) . (strlen($tender['description']) > 150 ? '...' : '') ?>
-                        </p>
-
-                        <div class="row text-center border-top border-bottom py-3 mb-3">
-                            <div class="col-md-4">
-                                <p class="small text-muted mb-0">Type</p>
-                                <p class="mb-0"><strong><?= ucfirst($tender['tender_type']) ?></strong></p>
-                            </div>
-                            <div class="col-md-4">
-                                <p class="small text-muted mb-0">Closes</p>
-                                <p class="mb-0"><strong><?= date('d M Y', strtotime($tender['closing_date'])) ?></strong></p>
-                            </div>
-                            <div class="col-md-4">
-                                <p class="small text-muted mb-0">Budget</p>
-                                <p class="mb-0"><strong><?= $tender['budget_estimate'] ? 'R ' . number_format($tender['budget_estimate'], 2) : 'TBD' ?></strong></p>
+                            <div class="flex items-center gap-4">
+                                <button class="p-2 text-slate-400 hover:text-primary rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800" aria-label="Bookmark">
+                                    <span class="material-symbols-outlined">bookmark</span>
+                                </button>
+                                <a href="/tender/view/<?= esc($tender['ocid'] ?? '') ?>" class="text-slate-300 group-hover:translate-x-1 transition-transform">
+                                    <span class="material-symbols-outlined">chevron_right</span>
+                                </a>
                             </div>
                         </div>
-
-                        <a href="/tender/view/<?= $tender['ocid'] ?>" class="btn btn-primary">
-                            <i class="fas fa-eye me-2"></i>View Details
-                        </a>
-                        <?php if (session()->has('user_id')): ?>
-                            <button class="btn btn-outline-success" onclick="subscribeTender(<?= $tender['ocid'] ?>)">
-                                <i class="fas fa-bell me-2"></i>Subscribe to Updates
-                            </button>
-                        <?php else: ?>
-                            <a href="/auth/login" class="btn btn-outline-success">
-                                <i class="fas fa-bell me-2"></i>Subscribe to Updates
-                            </a>
-                        <?php endif; ?>
-                    </div>
+                    <?php endforeach; ?>
                 </div>
-            <?php endforeach; ?>
 
-            <!-- Pagination -->
-            <nav aria-label="Page navigation" class="mt-4">
-                <ul class="pagination justify-content-center">
-                    <?php 
-                    $totalPages = ceil($total / $perPage);
-                    $startPage = max(1, $page - 2);
-                    $endPage = min($totalPages, $page + 2);
-                    
-                    if ($page > 1): ?>
-                        <li class="page-item">
-                            <a class="page-link" href="/?page=1<?= isset($filters['search']) ? '&search=' . $filters['search'] : '' ?>">
-                                First
-                            </a>
-                        </li>
-                    <?php endif; ?>
-
-                    <?php for ($i = $startPage; $i <= $endPage; $i++): ?>
-                        <li class="page-item <?= $i == $page ? 'active' : '' ?>">
-                            <a class="page-link" href="/?page=<?= $i ?>">
+                <!-- Pagination -->
+                <div class="flex items-center justify-center pt-8">
+                    <nav class="flex items-center gap-1">
+                        <?php
+                        $totalPages = max(1, ceil($total / $perPage));
+                        $startPage = max(1, $page - 2);
+                        $endPage = min($totalPages, $page + 2);
+                        ?>
+                        <button class="w-10 h-10 flex items-center justify-center rounded-lg border border-slate-200 dark:border-slate-800 text-slate-600 hover:bg-slate-100 dark:hover:bg-slate-800" <?= $page <= 1 ? 'disabled' : '' ?> onclick="location.href='/?page=<?= max(1, $page-1) ?>'">
+                            <span class="material-symbols-outlined">chevron_left</span>
+                        </button>
+                        <?php for ($i = $startPage; $i <= $endPage; $i++): ?>
+                            <button class="w-10 h-10 flex items-center justify-center rounded-lg <?= $i == $page ? 'bg-primary text-white' : 'border border-slate-200 dark:border-slate-800 text-slate-600 hover:bg-slate-100 dark:hover:bg-slate-800' ?>" onclick="location.href='/?page=<?= $i ?>'">
                                 <?= $i ?>
-                            </a>
-                        </li>
-                    <?php endfor; ?>
-
-                    <?php if ($page < $totalPages): ?>
-                        <li class="page-item">
-                            <a class="page-link" href="/?page=<?= $totalPages ?>">
-                                Last
-                            </a>
-                        </li>
-                    <?php endif; ?>
-                </ul>
-            </nav>
-        <?php else: ?>
-            <div class="no-results">
-                <i class="fas fa-inbox fa-3x mb-3 text-muted"></i>
-                <h4>No tenders found</h4>
-                <p>Try adjusting your search filters or browse all available tenders.</p>
-                <a href="/" class="btn btn-primary mt-3">View All Tenders</a>
-            </div>
-        <?php endif; ?>
-    </div>
+                            </button>
+                        <?php endfor; ?>
+                        <button class="w-10 h-10 flex items-center justify-center rounded-lg border border-slate-200 dark:border-slate-800 text-slate-600 hover:bg-slate-100 dark:hover:bg-slate-800" <?= $page >= $totalPages ? 'disabled' : '' ?> onclick="location.href='/?page=<?= min($totalPages, $page+1) ?>'">
+                            <span class="material-symbols-outlined">chevron_right</span>
+                        </button>
+                    </nav>
+                </div>
+            <?php else: ?>
+                <div class="no-results">
+                    <span class="material-symbols-outlined text-6xl text-slate-400">inbox</span>
+                    <h4 class="mt-4 text-xl font-semibold text-slate-900 dark:text-white">No tenders found</h4>
+                    <p class="mt-2 text-slate-500 dark:text-slate-400">Try adjusting your search filters or browse all available tenders.</p>
+                    <a href="/" class="mt-4 inline-flex items-center justify-center rounded-lg bg-primary px-6 py-3 text-sm font-bold text-white hover:bg-primary/90">
+                        View All Tenders
+                    </a>
+                </div>
+            <?php endif; ?>
+        </div>
+    </section>
 </div>
 
 <?= $this->endSection() ?>
@@ -257,7 +172,6 @@
 <?= $this->section('scripts') ?>
 <script>
 function subscribeTender(tenderId) {
-    // This will be implemented with the subscription functionality
     window.location.href = '/subscription/create?ocid=' + tenderId;
 }
 </script>

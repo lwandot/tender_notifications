@@ -2,275 +2,211 @@
 
 <?= $this->section('content') ?>
 
-<nav aria-label="breadcrumb" class="mb-4">
-    <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a href="/">Home</a></li>
-        <li class="breadcrumb-item active"><?= substr($tender['title'], 0, 40) ?>...</li>
-    </ol>
+<nav class="flex items-center gap-2 mb-6 text-sm px-6 md:px-10">
+    <a class="text-slate-500 hover:text-primary dark:text-slate-400" href="/">Tender Browse</a>
+    <span class="material-symbols-outlined text-slate-400 text-sm">chevron_right</span>
+    <span class="text-slate-900 dark:text-slate-100 font-medium">Tender Details</span>
 </nav>
 
-<!-- API Response Toggle -->
-<div class="container-fluid mb-4">
-    <div class="d-flex justify-content-end">
-        <button class="btn btn-outline-info btn-sm" type="button" data-bs-toggle="collapse" data-bs-target="#apiResponse" aria-expanded="false" aria-controls="apiResponse">
-            <i class="fas fa-code me-2"></i>View API Request
-        </button>
+<div class="px-6 md:px-10 py-6">
+    <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8">
+        <div class="flex flex-col gap-1">
+            <h1 class="text-slate-900 dark:text-slate-100 text-3xl md:text-4xl font-black leading-tight tracking-tight">
+                <?= esc($tender['title'] ?? 'Untitled Tender') ?>
+            </h1>
+            <p class="text-slate-500 dark:text-slate-400 text-lg">
+                Tender Reference: <span class="font-semibold"><?= esc($tender['tender_number'] ?? ($tender['ocid'] ?? 'N/A')) ?></span>
+            </p>
+        </div>
+        <a href="/" class="inline-flex items-center justify-center rounded-lg h-11 px-6 bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-slate-100 text-sm font-bold border border-slate-200 dark:border-slate-700 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors">
+            <span class="material-symbols-outlined mr-2">arrow_back</span>
+            Back to Browse
+        </a>
     </div>
-    <div class="collapse mt-3" id="apiResponse">
-        <div class="card">
-            <div class="card-header">
-                <h6 class="mb-0"><i class="fas fa-server me-2"></i>API Request Details</h6>
-            </div>
-            <div class="card-body">
-                <div class="mb-3">
-                    <strong>Request URL:</strong>
-                    <div class="mt-2">
-                        <code class="bg-light p-2 rounded d-block text-break"><?= $requestUrl ?></code>
-                    </div>
-                </div>
-                <div class="mb-3">
-                    <strong>OCID:</strong>
-                    <div class="mt-2">
-                        <code class="bg-light p-2 rounded d-block text-break"><?= $tender['ocid'] ?? $tender['ocid'] ?></code>
-                    </div>
-                </div>
-            </div>
+
+    <!-- Tabs -->
+    <div class="border-b border-slate-200 dark:border-slate-800 mb-8 overflow-x-auto">
+        <div class="flex gap-8 min-w-max px-6 md:px-0">
+            <a class="border-b-2 border-primary text-primary pb-3 font-bold text-sm px-1" href="#">Overview</a>
+            <a class="border-b-2 border-transparent text-slate-500 dark:text-slate-400 pb-3 font-bold text-sm px-1 hover:text-slate-700 dark:hover:text-slate-200" href="#">Briefing &amp; Documents</a>
+            <a class="border-b-2 border-transparent text-slate-500 dark:text-slate-400 pb-3 font-bold text-sm px-1 hover:text-slate-700 dark:hover:text-slate-200" href="#">Enquiries</a>
+            <a class="border-b-2 border-transparent text-slate-500 dark:text-slate-400 pb-3 font-bold text-sm px-1 hover:text-slate-700 dark:hover:text-slate-200" href="#">Evaluation Criteria</a>
         </div>
     </div>
-</div>
 
-<div class="row">
-    <div class="col-lg-8">
-        <!-- Tender Details -->
-        <div class="tender-details">
-            <div class="tender-header mb-4">
-                <div class="d-flex justify-content-between align-items-start mb-3">
-                    <h1><?= $tender['title'] ?></h1>
-                    <span class="status-badge status-<?= $tender['status'] ?>">
-                        <?= ucfirst($tender['status']) ?>
-                    </span>
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <!-- Left Column: General Details & Enquiries -->
+        <div class="lg:col-span-2 space-y-8">
+            <!-- General Details Section -->
+            <section class="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 p-6 shadow-sm">
+                <div class="flex items-center gap-2 mb-6 text-primary">
+                    <span class="material-symbols-outlined">info</span>
+                    <h2 class="text-xl font-bold text-slate-900 dark:text-slate-100">General Details</h2>
                 </div>
-                <p class="text-muted">
-                    <strong>Tender No:</strong> <?= $tender['tender_number'] ?>
-                </p>
-            </div>
-
-            <!-- Basic Details -->
-            <div class="detail-section">
-                <h5><i class="fas fa-info-circle me-2"></i>Basic Information</h5>
-                <div class="row mb-3">
-                    <div class="col-md-6">
-                        <p class="mb-2"><strong>Organ of State:</strong></p>
-                        <p><?= $tender['organ_of_state']['name'] ?? 'N/A' ?></p>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-y-6 gap-x-12">
+                    <div class="space-y-1">
+                        <p class="text-xs uppercase tracking-wider text-slate-400 font-bold">Tender Number</p>
+                        <p class="text-slate-900 dark:text-slate-100 font-medium"><?= esc($tender['tender_number'] ?? ($tender['ocid'] ?? 'N/A')) ?></p>
                     </div>
-                    <div class="col-md-6">
-                        <p class="mb-2"><strong>Province:</strong></p>
-                        <p><?= $tender['province']['name'] ?? 'N/A' ?></p>
+                    <div class="space-y-1">
+                        <p class="text-xs uppercase tracking-wider text-slate-400 font-bold">Organ of State</p>
+                        <p class="text-slate-900 dark:text-slate-100 font-medium"><?= esc($tender['organ_of_state']['name'] ?? 'N/A') ?></p>
                     </div>
-                </div>
-                <div class="row mb-3">
-                    <div class="col-md-6">
-                        <p class="mb-2"><strong>Type:</strong></p>
-                        <p><?= ucfirst($tender['tender_type']) ?></p>
+                    <div class="space-y-1">
+                        <p class="text-xs uppercase tracking-wider text-slate-400 font-bold">Tender Type</p>
+                        <p class="text-slate-900 dark:text-slate-100 font-medium"><?= esc($tender['tender_type'] ? ucfirst($tender['tender_type']) : 'N/A') ?></p>
                     </div>
-                    <div class="col-md-6">
-                        <p class="mb-2"><strong>Budget Estimate:</strong></p>
-                        <p><?= $tender['budget_estimate'] ? 'R ' . number_format($tender['budget_estimate'], 2) : 'Not Specified' ?></p>
+                    <div class="space-y-1">
+                        <p class="text-xs uppercase tracking-wider text-slate-400 font-bold">Province</p>
+                        <p class="text-slate-900 dark:text-slate-100 font-medium"><?= esc($tender['province']['name'] ?? 'N/A') ?></p>
+                    </div>
+                    <div class="space-y-1">
+                        <p class="text-xs uppercase tracking-wider text-slate-400 font-bold">Date Published</p>
+                        <p class="text-slate-900 dark:text-slate-100 font-medium"><?= isset($tender['published_date']) ? date('F j, Y', strtotime($tender['published_date'])) : 'N/A' ?></p>
+                    </div>
+                    <div class="space-y-1">
+                        <p class="text-xs uppercase tracking-wider text-slate-400 font-bold">Closing Date</p>
+                        <p class="text-primary font-bold"><?= isset($tender['closing_date']) ? date('F j, Y \@ h:i A', strtotime($tender['closing_date'])) : 'TBD' ?></p>
                     </div>
                 </div>
-            </div>
+                <div class="mt-8 pt-6 border-t border-slate-100 dark:border-slate-800">
+                    <h3 class="font-bold text-slate-900 dark:text-slate-100 mb-3">Tender Description</h3>
+                    <p class="text-slate-600 dark:text-slate-400 leading-relaxed">
+                        <?= esc($tender['description'] ?? 'No description available.') ?>
+                    </p>
+                </div>
+            </section>
 
-            <!-- Key Dates -->
-            <div class="detail-section">
-                <h5><i class="fas fa-calendar-alt me-2"></i>Key Dates</h5>
-                <div class="row">
-                    <div class="col-md-6 mb-3">
-                        <p class="small text-muted mb-1">Published</p>
-                        <p class="mb-0"><?= date('d M Y H:i', strtotime($tender['published_date'])) ?></p>
-                    </div>
-                    <div class="col-md-6 mb-3">
-                        <p class="small text-muted mb-1">Opening Date</p>
-                        <p class="mb-0"><?= date('d M Y H:i', strtotime($tender['opening_date'])) ?></p>
-                    </div>
-                    <div class="col-md-6">
-                        <p class="small text-muted mb-1">Closing Date</p>
-                        <p class="mb-0">
-                            <strong class="text-danger"><?= date('d M Y H:i', strtotime($tender['closing_date'])) ?></strong>
+            <!-- Enquiries Section -->
+            <section class="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 p-6 shadow-sm">
+                <div class="flex items-center gap-2 mb-6 text-primary">
+                    <span class="material-symbols-outlined">contact_support</span>
+                    <h2 class="text-xl font-bold text-slate-900 dark:text-slate-100">Enquiries</h2>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <div class="bg-background-light dark:bg-slate-800/50 p-4 rounded-lg">
+                        <p class="font-bold text-slate-900 dark:text-slate-100 mb-3 flex items-center gap-2">
+                            <span class="material-symbols-outlined text-sm">person</span>
+                            Technical Enquiries
                         </p>
+                        <div class="space-y-2 text-sm">
+                            <div class="flex justify-between">
+                                <span class="text-slate-500">Contact Person:</span>
+                                <span class="font-medium"><?= esc($tender['technical_contact']['name'] ?? 'TBA') ?></span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-slate-500">Email:</span>
+                                <span class="font-medium"><a class="text-primary hover:underline" href="mailto:<?= esc($tender['technical_contact']['email'] ?? 'info@gov.za') ?>"><?= esc($tender['technical_contact']['email'] ?? 'info@gov.za') ?></a></span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-slate-500">Telephone:</span>
+                                <span class="font-medium"><?= esc($tender['technical_contact']['phone'] ?? 'N/A') ?></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bg-background-light dark:bg-slate-800/50 p-4 rounded-lg">
+                        <p class="font-bold text-slate-900 dark:text-slate-100 mb-3 flex items-center gap-2">
+                            <span class="material-symbols-outlined text-sm">payments</span>
+                            SCM Enquiries
+                        </p>
+                        <div class="space-y-2 text-sm">
+                            <div class="flex justify-between">
+                                <span class="text-slate-500">Contact Person:</span>
+                                <span class="font-medium"><?= esc($tender['scm_contact']['name'] ?? 'TBA') ?></span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-slate-500">Email:</span>
+                                <span class="font-medium"><a class="text-primary hover:underline" href="mailto:<?= esc($tender['scm_contact']['email'] ?? 'scm@gov.za') ?>"><?= esc($tender['scm_contact']['email'] ?? 'scm@gov.za') ?></a></span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-slate-500">Telephone:</span>
+                                <span class="font-medium"><?= esc($tender['scm_contact']['phone'] ?? 'N/A') ?></span>
+                            </div>
+                        </div>
                     </div>
                 </div>
-            </div>
+            </section>
+        </div>
 
-            <!-- Description -->
-            <div class="detail-section">
-                <h5><i class="fas fa-file-alt me-2"></i>Description</h5>
-                <div class="bg-light p-3 rounded">
-                    <?= nl2br($tender['description']) ?>
+        <!-- Right Column: Briefing & Documents -->
+        <div class="space-y-8">
+            <!-- Briefing Session -->
+            <section class="bg-primary/5 dark:bg-primary/10 rounded-xl border border-primary/20 p-6 shadow-sm">
+                <div class="flex items-center gap-2 mb-4 text-primary">
+                    <span class="material-symbols-outlined">event</span>
+                    <h2 class="text-xl font-bold">Briefing Session</h2>
                 </div>
-            </div>
-
-            <!-- Enquiries -->
-            <?php if (!empty($tender['enquiries'])): ?>
-                <div class="detail-section">
-                    <h5><i class="fas fa-question-circle me-2"></i>Tender Enquiries Contact</h5>
-                    <?php foreach ($tender['enquiries'] as $enquiry): ?>
-                        <div class="enquiry-item">
-                            <p class="mb-1">
-                                <strong><?= $enquiry['contact_person'] ?></strong>
-                            </p>
-                            <p class="mb-1 small">
-                                <i class="fas fa-envelope me-2"></i>
-                                <a href="mailto:<?= $enquiry['email'] ?>"><?= $enquiry['email'] ?></a>
-                            </p>
-                            <?php if ($enquiry['phone']): ?>
-                                <p class="mb-1 small">
-                                    <i class="fas fa-phone me-2"></i>
-                                    <a href="tel:<?= $enquiry['phone'] ?>"><?= $enquiry['phone'] ?></a>
-                                </p>
-                            <?php endif; ?>
-                            <?php if ($enquiry['fax']): ?>
-                                <p class="mb-0 small">
-                                    <i class="fas fa-fax me-2"></i>
-                                    <?= $enquiry['fax'] ?>
-                                </p>
-                            <?php endif; ?>
+                <div class="space-y-4">
+                    <div class="flex gap-3">
+                        <span class="material-symbols-outlined text-slate-400">calendar_today</span>
+                        <div>
+                            <p class="text-xs uppercase font-bold text-slate-400">Date &amp; Time</p>
+                            <p class="text-slate-900 dark:text-slate-100 font-medium"><?= esc($tender['briefing_session']['date'] ?? 'TBA') ?></p>
                         </div>
-                    <?php endforeach; ?>
+                    </div>
+                    <div class="flex gap-3">
+                        <span class="material-symbols-outlined text-slate-400">location_on</span>
+                        <div>
+                            <p class="text-xs uppercase font-bold text-slate-400">Venue</p>
+                            <p class="text-slate-900 dark:text-slate-100 font-medium"><?= esc($tender['briefing_session']['venue'] ?? 'TBA') ?></p>
+                        </div>
+                    </div>
+                    <div class="flex gap-3">
+                        <span class="material-symbols-outlined text-slate-400">task_alt</span>
+                        <div>
+                            <p class="text-xs uppercase font-bold text-slate-400">Compulsory</p>
+                            <span class="inline-flex items-center rounded-full bg-red-100 px-2.5 py-0.5 text-xs font-bold text-red-700">YES</span>
+                        </div>
+                    </div>
+                    <div class="mt-4 pt-4 border-t border-primary/10">
+                        <div class="w-full h-32 bg-slate-200 dark:bg-slate-700 rounded-lg overflow-hidden relative">
+                            <img class="w-full h-full object-cover opacity-50 dark:opacity-30" data-alt="Stylized map showing Johannesburg city center" data-location="Johannesburg" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAwwum-UaXLvRzSCu6LmiPbSsWRFJgo9irJZdwbhUUGl16f3kDms_LlGxu3US16t4hfKtfVFUGy-oT-hhEB4M5VWVrthTMeko-VkN68puxKZi5KNZAed24GfjuFLiqXyY2uMMS2dFkGl1OSf88_2df1W_VDi65nDDEu403vzlk_E6tFdBTFx-JfqgbItGSjdn2KR1XfW3X_EQsGKhlsEyx5LzbuIX2W0wrBK8blNRL73A0E6QX4Ymouzg3Nofr22Aaz9JMB0l7Qcw" alt="Map placeholder">
+                            <div class="absolute inset-0 flex items-center justify-center">
+                                <button class="bg-white dark:bg-slate-900 text-primary font-bold px-4 py-2 rounded-lg text-xs shadow-lg flex items-center gap-2">
+                                    <span class="material-symbols-outlined text-sm">map</span>
+                                    View Map
+                                </button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-            <?php endif; ?>
+            </section>
 
-            <!-- Briefing Sessions -->
-            <?php if (!empty($tender['briefing_sessions'])): ?>
-                <div class="detail-section">
-                    <h5><i class="fas fa-video me-2"></i>Briefing Sessions</h5>
-                    <?php foreach ($tender['briefing_sessions'] as $session): ?>
-                        <div class="card mb-2">
-                            <div class="card-body">
-                                <div class="d-flex justify-content-between align-items-start">
+            <!-- Documents Section -->
+            <section class="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 p-6 shadow-sm">
+                <div class="flex items-center justify-between mb-6">
+                    <div class="flex items-center gap-2 text-primary">
+                        <span class="material-symbols-outlined">description</span>
+                        <h2 class="text-xl font-bold text-slate-900 dark:text-slate-100">Documents</h2>
+                    </div>
+                    <span class="bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 text-xs font-bold px-2 py-1 rounded"><?= isset($tender['documents']) ? count($tender['documents']) : 0 ?> Files</span>
+                </div>
+                <div class="space-y-3">
+                    <?php if (!empty($tender['documents'])): ?>
+                        <?php foreach ($tender['documents'] as $doc): ?>
+                            <div class="group flex items-center justify-between p-3 rounded-lg border border-slate-100 dark:border-slate-800 hover:border-primary/50 hover:bg-primary/5 transition-all cursor-pointer">
+                                <div class="flex items-center gap-3">
+                                    <div class="size-10 bg-red-50 dark:bg-red-900/20 flex items-center justify-center rounded">
+                                        <span class="material-symbols-outlined text-red-600">picture_as_pdf</span>
+                                    </div>
                                     <div>
-                                        <p class="mb-1">
-                                            <i class="fas fa-calendar-alt text-primary me-2"></i>
-                                            <strong><?= date('d M Y', strtotime($session['date'])) ?> at <?= date('H:i', strtotime($session['time'])) ?></strong>
-                                        </p>
-                                        <p class="mb-0">
-                                            <i class="fas fa-map-marker-alt text-primary me-2"></i>
-                                            <?= $session['is_virtual'] ? 'Virtual Session' : 'Physical Session' ?>
-                                        </p>
-                                        <p class="small text-muted mb-0 mt-2"><?= $session['venue'] ?></p>
-                                        <?php if ($session['is_virtual'] && $session['virtual_link']): ?>
-                                            <a href="<?= $session['virtual_link'] ?>" target="_blank" class="btn btn-sm btn-primary mt-2">
-                                                <i class="fas fa-link me-1"></i>Join Virtual Session
-                                            </a>
-                                        <?php endif; ?>
+                                        <p class="text-sm font-bold text-slate-900 dark:text-slate-100"><?= esc($doc['title'] ?? 'Document') ?></p>
+                                        <p class="text-xs text-slate-500"><?= esc($doc['size'] ?? '—') ?> <?= esc($doc['format'] ?? '') ?></p>
                                     </div>
                                 </div>
+                                <span class="material-symbols-outlined text-slate-400 group-hover:text-primary">download</span>
                             </div>
-                        </div>
-                    <?php endforeach; ?>
+                        <?php endforeach; ?>
+                    <?php else: ?>
+                        <p class="text-slate-500 dark:text-slate-400">No documents available yet.</p>
+                    <?php endif; ?>
                 </div>
-            <?php endif; ?>
-
-            <!-- Documents -->
-            <?php if (!empty($tender['documents'])): ?>
-                <div class="detail-section">
-                    <h5><i class="fas fa-file-download me-2"></i>Tender Documents</h5>
-                    <?php foreach ($tender['documents'] as $doc): ?>
-                        <div class="document-item">
-                            <div class="d-flex justify-content-between align-items-center">
-                                <div>
-                                    <p class="mb-1">
-                                        <strong><?= $doc['title'] ?></strong>
-                                    </p>
-                                    <p class="small text-muted mb-0">
-                                        <?= strtoupper($doc['format']) ?>
-                                    </p>
-                                </div>
-                                <a href="/api/documents/download/<?= $doc['id'] ?>" class="btn btn-sm btn-download text-white">
-                                    <i class="fas fa-download me-1"></i>Download
-                                </a>
-                            </div>
-                        </div>
-                    <?php endforeach; ?>
-                </div>
-            <?php endif; ?>
-        </div>
-    </div>
-
-    <!-- Sidebar -->
-    <div class="col-lg-4">
-        <!-- Subscribe Card -->
-        <div class="card mb-3">
-            <div class="card-body">
-                <h5 class="card-title mb-3">
-                    <i class="fas fa-bell me-2"></i>Stay Updated
-                </h5>
-                <?php if (session()->has('user_id')): ?>
-                    <form action="/subscription/create" method="post">
-                        <?= csrf_field() ?>
-                        <input type="hidden" name="filter_type" value="tender">
-                        <input type="hidden" name="filter_value" value="<?= $tender['id'] ?>">
-                        <p class="small text-muted mb-3">Get notified when new tenders matching your interests are published</p>
-                        <div class="mb-3">
-                            <label for="notifType" class="form-label small">Notification Type</label>
-                            <select class="form-select form-select-sm" id="notifType" name="notification_type">
-                                <option value="email">Email</option>
-                                <option value="push">Push Notification</option>
-                            </select>
-                        </div>
-                        <button type="submit" class="btn btn-success w-100">
-                            <i class="fas fa-check me-2"></i>Subscribe
-                        </button>
-                    </form>
-                <?php else: ?>
-                    <p class="small text-muted mb-3">Sign up to receive notifications for new tenders</p>
-                    <a href="/auth/register" class="btn btn-primary w-100">
-                        <i class="fas fa-user-plus me-2"></i>Create Account
-                    </a>
-                    <a href="/auth/login" class="btn btn-outline-primary w-100 mt-2">
-                        <i class="fas fa-sign-in-alt me-2"></i>Sign In
-                    </a>
-                <?php endif; ?>
-            </div>
-        </div>
-
-        <!-- Share Card -->
-        <div class="card mb-3">
-            <div class="card-body">
-                <h5 class="card-title mb-3">
-                    <i class="fas fa-share-alt me-2"></i>Share
-                </h5>
-                <div class="d-grid gap-2">
-                    <a href="https://www.facebook.com/sharer/sharer.php?u=<?= urlencode(current_url()) ?>" 
-                       target="_blank" class="btn btn-outline-primary btn-sm">
-                        <i class="fab fa-facebook me-2"></i>Facebook
-                    </a>
-                    <a href="https://twitter.com/intent/tweet?url=<?= urlencode(current_url()) ?>&text=<?= urlencode($tender['title']) ?>" 
-                       target="_blank" class="btn btn-outline-info btn-sm">
-                        <i class="fab fa-twitter me-2"></i>Twitter
-                    </a>
-                    <a href="https://www.linkedin.com/sharing/share-offsite/?url=<?= urlencode(current_url()) ?>" 
-                       target="_blank" class="btn btn-outline-secondary btn-sm">
-                        <i class="fab fa-linkedin me-2"></i>LinkedIn
-                    </a>
-                </div>
-            </div>
-        </div>
-
-        <!-- Print Card -->
-        <div class="card">
-            <div class="card-body">
-                <button class="btn btn-outline-secondary w-100" onclick="window.print()">
-                    <i class="fas fa-print me-2"></i>Print Tender
+                <button class="w-full mt-6 py-3 border-2 border-dashed border-slate-200 dark:border-slate-700 rounded-lg text-slate-400 text-sm font-bold hover:border-primary hover:text-primary transition-colors">
+                    Download All (ZIP)
                 </button>
-            </div>
+            </section>
         </div>
     </div>
-</div>
-
-<div class="mt-4">
-    <a href="/" class="btn btn-outline-secondary">
-        <i class="fas fa-arrow-left me-2"></i>Back to Tenders
-    </a>
 </div>
 
 <?= $this->endSection() ?>
