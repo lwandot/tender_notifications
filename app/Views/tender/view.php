@@ -179,12 +179,10 @@
                             <div class="d-flex justify-content-between align-items-center">
                                 <div>
                                     <p class="mb-1">
-                                        <strong><?= $doc['document_name'] ?></strong>
+                                        <strong><?= $doc['title'] ?></strong>
                                     </p>
                                     <p class="small text-muted mb-0">
-                                        <?= strtoupper($doc['file_type']) ?> • 
-                                        <?= number_format($doc['file_size'] / 1024 / 1024, 2) ?> MB • 
-                                        Downloaded <?= $doc['download_count'] ?> times
+                                        <?= strtoupper($doc['format']) ?>
                                     </p>
                                 </div>
                                 <a href="/api/documents/download/<?= $doc['id'] ?>" class="btn btn-sm btn-download text-white">
