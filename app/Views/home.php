@@ -68,6 +68,31 @@
             </label>
         </form>
 
+        <!-- API Debug Output (toggle) -->
+        <div class="max-w-3xl">
+            <button id="apiDebugToggle" type="button" class="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-slate-100 dark:bg-slate-800 text-sm font-medium text-slate-700 dark:text-slate-200 hover:bg-slate-200 dark:hover:bg-slate-700">
+                <span class="material-symbols-outlined">visibility</span>
+                <span>Show API request/response</span>
+            </button>
+
+            <div id="apiDebugPanel" class="mt-4 hidden rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950 p-4">
+                <div class="flex items-start justify-between gap-4">
+                    <div class="space-y-2">
+                        <h3 class="text-sm font-semibold text-slate-900 dark:text-white">API request</h3>
+                        <p class="text-xs text-slate-500 dark:text-slate-400 break-words"><code><?= esc($requestUrl ?? 'N/A') ?></code></p>
+                    </div>
+                    <button id="apiDebugClose" type="button" class="text-slate-500 hover:text-slate-800 dark:hover:text-white text-sm">Hide</button>
+                </div>
+
+                <div class="mt-4">
+                    <h4 class="text-sm font-semibold text-slate-900 dark:text-white">API response</h4>
+                    <pre class="mt-2 max-h-64 overflow-y-auto rounded-lg bg-slate-50 dark:bg-slate-900 p-3 text-xs text-slate-700 dark:text-slate-200">
+<?= esc(json_encode($rawApiResponse ?? [], JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES)) ?: 'No API response' ?>
+                    </pre>
+                </div>
+            </div>
+        </div>
+
         <!-- Content List -->
         <div class="space-y-6">
             <div class="flex items-center justify-between">
@@ -174,5 +199,35 @@
 function subscribeTender(tenderId) {
     window.location.href = '/subscription/create?ocid=' + tenderId;
 }
+
+(function () {
+    const toggleBtn = document.getElementById('apiDebugToggle');
+    const closeBtn = document.getElementById('apiDebugClose');
+    const panel = document.getElementById('apiDebugPanel');
+
+    function setPanelVisibility(visible) {
+        if (!panel || !toggleBtn) return;
+        panel.classList.toggle('hidden', !visible);
+        const label = toggleBtn.querySelector('span:last-child');
+        if (label) {
+            label.textContent = visible ? 'Hide API request/response' : 'Show API request/response';
+        }
+    }
+
+    function init() {
+        if (!toggleBtn) return;
+        toggleBtn.addEventListener('click', () => setPanelVisibility(!panel.classList.contains('hidden')));
+
+        if (closeBtn) {
+            closeBtn.addEventListener('click', () => setPanelVisibility(false));
+        }
+    }
+
+    if (document.readyState !== 'loading') {
+        init();
+    } else {
+        document.addEventListener('DOMContentLoaded', init);
+    }
+})();
 </script>
 <?= $this->endSection() ?>
