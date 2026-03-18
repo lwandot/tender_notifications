@@ -2,7 +2,7 @@
 
 <?= $this->section('content') ?>
 
-<nav class="flex items-center gap-2 mb-6 text-sm px-6 md:px-10">
+<nav class="flex items-top gap-2 mb-6 text-sm px-6 md:px-10">
     <a class="text-slate-500 hover:text-primary dark:text-slate-400" href="/">Tender Browse</a>
     <span class="material-symbols-outlined text-slate-400 text-sm">chevron_right</span>
     <span class="text-slate-900 dark:text-slate-100 font-medium">Tender Details</span>
@@ -15,7 +15,7 @@
                 <?= esc($tender['procuring_entity']['name'] ?? 'Untitled Tender') ?>
             </h1>
             <p class="text-slate-500 dark:text-slate-400 text-lg">
-                Tender Reference: <span class="font-semibold"><?= esc($tender['tender_number'] ?? ($tender['ocid'] ?? 'N/A')) ?></span>
+                Tender Reference: <span class="font-semibold"><?= esc($tender['title'] ?? ($tender['title'] ?? 'N/A')) ?></span>
             </p>
         </div>
         <a href="/" class="inline-flex items-center justify-center rounded-lg h-11 px-6 bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-slate-100 text-sm font-bold border border-slate-200 dark:border-slate-700 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors">
@@ -28,9 +28,6 @@
     <div class="border-b border-slate-200 dark:border-slate-800 mb-8 overflow-x-auto">
         <div class="flex gap-8 min-w-max px-6 md:px-0">
             <a class="border-b-2 border-primary text-primary pb-3 font-bold text-sm px-1" href="#">Overview</a>
-            <a class="border-b-2 border-transparent text-slate-500 dark:text-slate-400 pb-3 font-bold text-sm px-1 hover:text-slate-700 dark:hover:text-slate-200" href="#">Briefing &amp; Documents</a>
-            <a class="border-b-2 border-transparent text-slate-500 dark:text-slate-400 pb-3 font-bold text-sm px-1 hover:text-slate-700 dark:hover:text-slate-200" href="#">Enquiries</a>
-            <a class="border-b-2 border-transparent text-slate-500 dark:text-slate-400 pb-3 font-bold text-sm px-1 hover:text-slate-700 dark:hover:text-slate-200" href="#">Evaluation Criteria</a>
         </div>
     </div>
 
@@ -72,7 +69,7 @@
                 <div class="mt-8 pt-6 border-t border-slate-100 dark:border-slate-800">
                     <h3 class="font-bold text-slate-900 dark:text-slate-100 mb-3">Tender Description</h3>
                     <p class="text-slate-600 dark:text-slate-400 leading-relaxed">
-                        <?= esc($tender['description'] ?? 'No description available.') ?>
+                        <?= esc(ucfirst(strtolower($tender['description'])) ?? 'No description available.') ?>
                     </p>
                 </div>
             </section>

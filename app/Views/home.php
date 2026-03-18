@@ -113,15 +113,15 @@
                         $closingAt = isset($tender['closing_date']) ? date('j M Y', strtotime($tender['closing_date'])) : 'TBD';
                         $tenderTitle = $tender['organ_of_state'] ?? 'Untitled Organ of State';
                         $procurementEntity = $tender['procuring_entity']['name'] ?? 'Untitled Tender'; 
-                        $tenderNumber = $tender['tender_number'] ?? ($tender['ocid'] ?? 'N/A');
+                        $tenderNumber = $tender['title'] ?? ($tender['tender_number'] ?? 'N/A');
                         $tenderStatus = isset($tender['status']) ? strtolower($tender['status']) : 'active';
                         $statusClass = match($tenderStatus) {
-                            'active' => 'bg-green-500 text-white',
-                            'closed' => 'bg-red-500 text-white',
-                            'cancelled' => 'bg-gray-500 text-white',
-                            default => 'bg-blue-500 text-white',
+                            'active' => 'bg-green-500 text-white ',
+                            'closed' => 'bg-red-500 text-white ',
+                            'cancelled' => 'bg-gray-500 text-white ',
+                            default => 'bg-blue-500 text-white ',
                         };
-                        $description = $tender['description'] ?? '';
+                        $description = ucfirst(strtolower($tender['description'])) ?? 'No description available.';
                         $categories = is_array($tender['category']) ? implode(', ', $tender['category']) : ($tender['category'] ?? 'N/A');
                         $daysLeft = isset($tender['closing_date']) ? ceil((strtotime($tender['closing_date']) - time()) / (60 * 60 * 24)) : 'N/A';
                         ?>
@@ -134,7 +134,7 @@
                                 <div class="flex flex-wrap items-center gap-2 mb-1">
                                     <span class="text-xs font-bold uppercase tracking-wider text-primary bg-primary/10 px-2 py-0.5 rounded"><?= esc($tenderNumber) ?></span>
                                     <span class="text-xs font-medium text-slate-400">Published <?= esc($publishedAt) ?></span>
-                                    <span class="text-xs font-bold uppercase tracking-wider px-2 py-0.5 rounded <?= $statusClass ?>"><?= esc(ucfirst($tenderStatus)) ?></span>
+                                    <span class="ml-auto text-xs font-bold uppercase tracking-wider px-2 py-0.5 rounded <?= $statusClass ?>"><?= esc(ucfirst($tenderStatus)) ?></span>
                                 </div>
                                 <h3 class="text-lg font-bold text-slate-900 dark:text-white group-hover:text-primary transition-colors">
                                     <a href="/tender/view/<?= esc($tender['ocid'] ?? '') ?>">

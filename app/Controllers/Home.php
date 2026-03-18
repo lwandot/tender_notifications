@@ -23,7 +23,7 @@ class Home extends BaseController
         // Set default date range: today to 7 days from now
         $today = date('Y-m-d');
         $sevenDaysFromNow = date('Y-m-d', strtotime('+7 days'));
-        $sevenDaysBack = date('Y-m-d', strtotime('-7 days'));
+        $monthBack = date('Y-m-d', strtotime('-30 days'));
 
         // Get filters from request (only include values explicitly provided by the user)
         $filters = [
@@ -32,8 +32,8 @@ class Home extends BaseController
             'category_id' => $this->request->getVar('category_id'),
             'tender_type' => $this->request->getVar('tender_type'),
             'search' => $this->request->getVar('search'),
-            'dateFrom' => $this->request->getVar('dateFrom') ?: $sevenDaysBack,
-            'dateTo' => $this->request->getVar('dateTo') ?: $sevenDaysFromNow,
+            'dateFrom' => $this->request->getVar('dateFrom') ?: $monthBack,
+            'dateTo' => $this->request->getVar('dateTo') ?: $today,
         ];
 
         // Remove empty filters so we only apply filtering when user has selected something
