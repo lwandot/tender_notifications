@@ -104,7 +104,7 @@ class TenderModel
     /**
      * Filter tenders by various criteria
      */
-    public function filterTenders($filters, $limit = 20, $offset = 0)
+    public function filterTenders($filters, $limit = 100, $offset = 0)
     {
         $page = floor($offset / $limit) + 1;
 
