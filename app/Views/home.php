@@ -58,7 +58,7 @@
                 <div class="filter-content space-y-1 px-2 hidden">
                     <?php foreach ($provinces as $province): ?>
                         <?php $active = isset($filters['province']) && $filters['province'] === $province; ?>
-                        <a href="/?province=<?= rawurlencode($province['name']) ?>" class="block px-3 py-2 rounded-lg text-sm <?= $active ? 'bg-primary/10 text-primary font-semibold' : 'text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800' ?>"><?= esc($province) ?></a>
+                        <a href="/?province=<?= rawurlencode($province['name']) ?>" class="block px-3 py-2 rounded-lg text-sm <?= $active ? 'bg-primary/10 text-primary font-semibold' : 'text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800' ?>"><?= esc($province['name']) ?></a>
                     <?php endforeach; ?>
                 </div>
             <?php else: ?>
@@ -292,7 +292,7 @@ function subscribeTender(tenderId) {
 
     function init() {
         if (!toggleBtn) return;
-        toggleBtn.addEventListener('click', () => setPanelVisibility(!panel.classList.contains('hidden')));
+        toggleBtn.addEventListener('click', () => setPanelVisibility(panel.classList.contains('hidden')));
 
         if (closeBtn) {
             closeBtn.addEventListener('click', () => setPanelVisibility(false));
