@@ -11,28 +11,76 @@
         </div>
 
         <nav class="space-y-2">
-            <div class="group flex items-center justify-between px-3 py-2.5 rounded-lg bg-primary/10 text-primary cursor-pointer">
+            <button type="button" class="filter-toggle group flex items-center justify-between px-3 py-2.5 rounded-lg text-slate-600 dark:text-slate-300 w-full text-left <?= isset($filters['category']) ? 'bg-slate-100 dark:bg-slate-800' : '' ?>">
                 <div class="flex items-center gap-3">
                     <span class="material-symbols-outlined">folder</span>
                     <span class="text-sm font-semibold">Category</span>
                 </div>
-                <span class="material-symbols-outlined text-sm">expand_more</span>
-            </div>
-            <div class="group flex items-center justify-between px-3 py-2.5 rounded-lg text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 cursor-pointer">
+                <span class="material-symbols-outlined chevron-icon text-sm transition-transform">chevron_right</span>
+            </button>
+            <?php if (!empty($categories) && is_array($categories)): ?>
+                <div class="filter-content space-y-1 px-2 hidden">
+                    <?php foreach ($categories as $category): ?>
+                        <?php $active = isset($filters['category']) && $filters['category'] === $category; ?>
+                        <a href="/?category=<?= rawurlencode($category['name']) ?>" class="block px-3 py-2 rounded-lg text-sm <?= $active ? 'bg-primary/10 text-primary font-semibold' : 'text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800' ?>"><?= esc($category['name']) ?></a>
+                    <?php endforeach; ?>
+                </div>
+            <?php else: ?>
+                <div class="px-3 py-2 rounded-lg text-sm text-slate-500 dark:text-slate-400">No categories available</div>
+            <?php endif; ?>
+
+            <button type="button" class="filter-toggle group flex items-center justify-between px-3 py-2.5 rounded-lg text-slate-600 dark:text-slate-300 w-full text-left <?= isset($filters['organ']) ? 'bg-slate-100 dark:bg-slate-800' : '' ?>">
                 <div class="flex items-center gap-3">
                     <span class="material-symbols-outlined">account_balance</span>
                     <span class="text-sm font-medium">Organ of State</span>
                 </div>
-                <span class="material-symbols-outlined text-sm">chevron_right</span>
-            </div>
-            <div class="group flex items-center justify-between px-3 py-2.5 rounded-lg text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 cursor-pointer">
+                <span class="material-symbols-outlined chevron-icon text-sm transition-transform">chevron_right</span>
+            </button>
+            <?php if (!empty($organs) && is_array($organs)): ?>
+                <div class="filter-content space-y-1 px-2 hidden">
+                    <?php foreach ($organs as $organ): ?>
+                        <?php $active = isset($filters['organ']) && $filters['organ'] === $organ; ?>
+                        <a href="/?organ=<?= rawurlencode($organ['name']) ?>" class="block px-3 py-2 rounded-lg text-sm <?= $active ? 'bg-primary/10 text-primary font-semibold' : 'text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800' ?>"><?= esc($organ['name']) ?></a>
+                    <?php endforeach; ?>
+                </div>
+            <?php else: ?>
+                <div class="px-3 py-2 rounded-lg text-sm text-slate-500 dark:text-slate-400">No organs of state available</div>
+            <?php endif; ?>
+
+            <button type="button" class="filter-toggle group flex items-center justify-between px-3 py-2.5 rounded-lg text-slate-600 dark:text-slate-300 w-full text-left <?= isset($filters['province']) ? 'bg-slate-100 dark:bg-slate-800' : '' ?>">
                 <div class="flex items-center gap-3">
                     <span class="material-symbols-outlined">map</span>
                     <span class="text-sm font-medium">Province</span>
                 </div>
-                <span class="material-symbols-outlined text-sm">chevron_right</span>
-            </div>
+                <span class="material-symbols-outlined chevron-icon text-sm transition-transform">chevron_right</span>
+            </button>
+            <?php if (!empty($provinces) && is_array($provinces)): ?>
+                <div class="filter-content space-y-1 px-2 hidden">
+                    <?php foreach ($provinces as $province): ?>
+                        <?php $active = isset($filters['province']) && $filters['province'] === $province; ?>
+                        <a href="/?province=<?= rawurlencode($province['name']) ?>" class="block px-3 py-2 rounded-lg text-sm <?= $active ? 'bg-primary/10 text-primary font-semibold' : 'text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800' ?>"><?= esc($province) ?></a>
+                    <?php endforeach; ?>
+                </div>
+            <?php else: ?>
+                <div class="px-3 py-2 rounded-lg text-sm text-slate-500 dark:text-slate-400">No provinces available</div>
+            <?php endif; ?>
         </nav>
+
+        <script>
+            (function(){
+                document.querySelectorAll('.filter-toggle').forEach(function(btn){
+                    btn.addEventListener('click', function(){
+                        var content = btn.nextElementSibling;
+                        if(!content) return;
+                        var icon = btn.querySelector('.chevron-icon');
+                        content.classList.toggle('hidden');
+                        btn.classList.toggle('bg-slate-100', !content.classList.contains('hidden'));
+                        btn.classList.toggle('dark:bg-slate-800', !content.classList.contains('hidden'));
+                        if(icon) icon.textContent = content.classList.contains('hidden') ? 'chevron_right' : 'expand_more';
+                    });
+                });
+            })();
+        </script>
 
         <div class="pt-6 border-t border-slate-100 dark:border-slate-800">
             <h3 class="text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider mb-4">Saved Searches</h3>

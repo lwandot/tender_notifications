@@ -6,7 +6,7 @@ use CodeIgniter\Model;
 
 class OrganModel extends Model
 {
-    protected $table            = 'organs';
+    protected $table            = 'organs_of_state';
     protected $primaryKey       = 'id';
     protected $returnType       = 'array';
     protected $allowedFields    = ['name'];
