@@ -4,13 +4,14 @@ namespace App\Models;
 
 use CodeIgniter\Model;
 
-class CategoryModel extends Model
+class OrganModel extends Model
 {
-    protected $table            = 'categories';
+    protected $table            = 'organs';
     protected $primaryKey       = 'id';
     protected $returnType       = 'array';
-    protected $allowedFields    = ['name', 'sub_categories'];
+    protected $allowedFields    = ['name'];
     protected $useTimestamps    = true;
     protected $createdField     = 'created_at';
     protected $updatedField     = 'updated_at';
 }
+?>
