@@ -2,57 +2,68 @@
 
 namespace App\Controllers;
 
-use App\Models\TenderModel;
+use App\Models\CategoryModel;
+use App\Models\ProvinceModel;
+use App\Models\OrganModel;
 
-class Tender extends BaseController
+class Tenders extends BaseController
 {
-    public function view($id = null)
+    public function index()
     {
-        if ($id === null) {
-            return redirect()->to('/');
-        }
+        $categoryModel = new CategoryModel();
+        $provinceModel = new ProvinceModel();
+        $organModel = new OrganModel();
 
-        $tenderModel = new TenderModel();
-        $tender = $tenderModel->getTenderWithDetails($id);
-
-        if (!$tender) {
-            throw new \CodeIgniter\Exceptions\PageNotFoundException('Tender not found');
-        }
-
-        // Build the API request URL
-        $apiBaseUrl = rtrim(getenv('TREASURY_API_URL') ?: 'https://ocds-api.etenders.gov.za/api/OCDSReleases', '/');
-        $requestUrl = $apiBaseUrl . '/release/' . $id;
-
+        // Retrieve filters dynamically from DB
         $data = [
-            'title' => $tender['title'],
-            'tender' => $tender,
-            'requestUrl' => $requestUrl,
+            'title'      => 'Active Government Tenders Portal',
+            'categories' => $categoryModel->findAll(),
+            'provinces'  => $provinceModel->findAll(),
+            'organs'     => $organModel->findAll(),
+            // Pass hardcoded mock active items for dynamic listing
+            'tenders'    => [
+                [
+                    'refNumber'     => 'RT29-2024',
+                    'title'         => 'Supply and Delivery of Medical Equipment to the State',
+                    'department'    => 'National Treasury',
+                    'location'      => 'Gauteng',
+                    'closingDate'   => '15 Aug 2024',
+                    'publishedDate' => '2 days ago',
+                    'iconType'      => 'medical'
+                ],
+                [
+                    'refNumber'     => 'W11432',
+                    'title'         => 'Maintenance of Water Treatment Plants - Region 4',
+                    'department'    => 'Department of Water and Sanitation',
+                    'location'      => 'Western Cape',
+                    'closingDate'   => '22 Aug 2024',
+                    'publishedDate' => '3 days ago',
+                    'iconType'      => 'engineering'
+                ],
+                [
+                    'refNumber'     => 'SITA/2024/005',
+                    'title'         => 'Supply of Laptops and Peripherals for Schools',
+                    'department'    => 'SITA',
+                    'location'      => 'Limpopo',
+                    'closingDate'   => '30 Aug 2024',
+                    'publishedDate' => 'Today',
+                    'iconType'      => 'computer'
+                ],
+                [
+                    'refNumber'     => 'EDU-08-2024',
+                    'title'         => 'Provision of School Nutrition Program Services',
+                    'department'    => 'Department of Education',
+                    'location'      => 'KwaZulu-Natal',
+                    'closingDate'   => '10 Sep 2024',
+                    'publishedDate' => '1 day ago',
+                    'iconType'      => 'general'
+                ],
+            ]
         ];
 
-        return view('tender/view', $data);
-    }
-
-    public function search()
-    {
-        $tenderModel = new TenderModel();
-        $query = $this->request->getVar('q');
-        $page = $this->request->getVar('page') ?? 1;
-        $perPage = 10;
-        $offset = ($page - 1) * $perPage;
-
-        $filters = ['search' => $query];
-        $tenders = $tenderModel->filterTenders($filters, $perPage, $offset);
-        $total = $tenderModel->countFilteredTenders($filters);
-
-        $data = [
-            'title' => 'Search Results: ' . $query,
-            'tenders' => $tenders,
-            'total' => $total,
-            'perPage' => $perPage,
-            'page' => $page,
-            'query' => $query,
-        ];
-
-        return view('tender/search', $data);
+        // Load Views
+        return view('layout/header', $data)
+             . view('tenders/index', $data)
+             . view('layout/footer');
     }
 }
