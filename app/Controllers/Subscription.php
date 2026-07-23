@@ -26,9 +26,7 @@ class Subscription extends BaseController
             'csrf_hash'  => csrf_hash()
         ];
 
-        return view('layout/header', $data)
-             . view('subscription/index', $data)
-             . view('layout/footer');
+        return view('subscription/index', $data);
     }
 
     public function process()
