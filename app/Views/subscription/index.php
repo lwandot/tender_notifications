@@ -188,59 +188,140 @@
                 </div>
 
                 <!-- PANEL 3: MULTIPLE FILTER SCOPES SELECTION -->
-                <div id="panel-filters" class="hidden space-y-8">
-                    
-                    <!-- Categories Choice -->
-                    <div class="space-y-3">
-                        <div class="flex justify-between items-center bg-slate-50 p-2 rounded-lg">
-                            <h4 class="text-xs font-bold text-slate-400 uppercase tracking-wider flex items-center gap-1">
-                                <i data-lucide="folder-open" class="w-4 h-4 text-primary"></i> 1. Select Categories
-                            </h4>
-                            <span class="text-xs font-semibold text-primary" id="lbl-cat-limit">Selected: 1 / Max 5</span>
+                <div id="panel-filters" class="hidden space-y-6">
+                    <p class="text-xs text-slate-500 mb-2">
+                        Search and select your desired target scopes below. Options are searchable with multiple selection.
+                    </p>
+
+                    <!-- Category Searchable Dropdown -->
+                    <div class="space-y-2 relative" id="dropdown-wrapper-category">
+                        <div class="flex justify-between items-center">
+                            <label class="text-xs font-bold text-slate-700 uppercase tracking-wider flex items-center gap-1.5">
+                                <i data-lucide="folder-open" class="w-4 h-4 text-primary"></i> 1. Category
+                            </label>
+                            <span class="text-xs font-semibold text-primary bg-primary/5 px-2.5 py-0.5 rounded-full border border-primary/20" id="lbl-cat-limit">
+                                Selected: 0 / Max 5
+                            </span>
                         </div>
-                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2.5">
-                            <?php foreach($categories as $category): ?>
-                                <button type="button" onclick="toggleMultiItem('category', '<?= esc($category['name']) ?>')" id="chk-cat-<?= esc($category['name']) ?>" class="flex items-center justify-between p-3 rounded-lg border border-slate-100 hover:bg-slate-50 text-slate-700 text-left transition-all">
-                                    <span class="text-xs font-medium truncate"><?= esc($category['name']) ?></span>
-                                    <div class="w-4 h-4 rounded border border-slate-300 flex items-center justify-center bg-white" id="box-cat-<?= esc($category['name']) ?>"></div>
-                                </button>
-                            <?php endforeach; ?>
+
+                        <!-- Trigger box -->
+                        <div onclick="toggleDropdownMenu('category')" id="trigger-category" class="min-h-[48px] w-full p-2.5 bg-white border border-slate-200 rounded-xl cursor-pointer hover:border-slate-300 transition-all flex items-center justify-between gap-2 shadow-xs">
+                            <div class="flex flex-wrap items-center gap-1.5 flex-1" id="chips-category">
+                                <span class="text-xs text-slate-400 pl-1">Select category...</span>
+                            </div>
+                            <div class="flex items-center gap-1 shrink-0 text-slate-400">
+                                <i data-lucide="chevron-down" class="w-4 h-4 transition-transform duration-200" id="chevron-category"></i>
+                            </div>
+                        </div>
+
+                        <!-- Dropdown Menu -->
+                        <div id="menu-category" class="hidden absolute z-30 top-full left-0 right-0 mt-1.5 bg-white border border-slate-200 rounded-xl shadow-xl overflow-hidden">
+                            <!-- Search box -->
+                            <div class="p-2.5 border-b border-slate-100 bg-slate-50/80 flex items-center gap-2">
+                                <i data-lucide="search" class="w-4 h-4 text-slate-400 shrink-0"></i>
+                                <input type="text" id="search-input-category" oninput="filterDropdownOptions('category', this.value)" placeholder="Type to filter categories (e.g. Medical, IT)..." class="w-full text-xs bg-transparent border-none outline-none text-slate-900 placeholder:text-slate-400">
+                            </div>
+
+                            <!-- List -->
+                            <div class="max-h-56 overflow-y-auto p-1.5 space-y-0.5" id="options-category">
+                                <?php foreach($categories as $category): ?>
+                                    <div onclick="toggleMultiItem('category', '<?= esc($category['name']) ?>')" id="chk-category-<?= esc($category['name']) ?>" class="flex items-center justify-between p-2.5 rounded-lg text-xs hover:bg-slate-50 text-slate-700 font-medium cursor-pointer transition-all opt-item-category" data-name="<?= esc(strtolower($category['name'])) ?>">
+                                        <div class="flex items-center gap-2.5 truncate pr-2">
+                                            <div class="w-4 h-4 rounded border border-slate-300 flex items-center justify-center bg-white shrink-0" id="box-category-<?= esc($category['name']) ?>"></div>
+                                            <span class="truncate"><?= esc($category['name']) ?></span>
+                                        </div>
+                                    </div>
+                                <?php endforeach; ?>
+                                <div id="no-match-category" class="hidden p-6 text-center text-slate-400 text-xs">No matching categories found</div>
+                            </div>
                         </div>
                     </div>
 
-                    <!-- Provinces Choice -->
-                    <div class="space-y-3 pt-6 border-t border-slate-100">
-                        <div class="flex justify-between items-center bg-slate-50 p-2 rounded-lg">
-                            <h4 class="text-xs font-bold text-slate-400 uppercase tracking-wider flex items-center gap-1">
-                                <i data-lucide="map" class="w-4 h-4 text-primary"></i> 2. Select Provinces
-                            </h4>
-                            <span class="text-xs font-semibold text-primary" id="lbl-prov-limit">Selected: 0 / Max 2</span>
+                    <!-- Province Searchable Dropdown -->
+                    <div class="space-y-2 relative" id="dropdown-wrapper-province">
+                        <div class="flex justify-between items-center">
+                            <label class="text-xs font-bold text-slate-700 uppercase tracking-wider flex items-center gap-1.5">
+                                <i data-lucide="map" class="w-4 h-4 text-primary"></i> 2. Province
+                            </label>
+                            <span class="text-xs font-semibold text-primary bg-primary/5 px-2.5 py-0.5 rounded-full border border-primary/20" id="lbl-prov-limit">
+                                Selected: 0 / Max 2
+                            </span>
                         </div>
-                        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2.5">
-                            <?php foreach($provinces as $province): ?>
-                                <button type="button" onclick="toggleMultiItem('province', '<?= esc($province['name']) ?>')" id="chk-prov-<?= esc($province['name']) ?>" class="flex items-center justify-between p-3 rounded-lg border border-slate-100 hover:bg-slate-50 text-slate-700 text-left transition-all">
-                                    <span class="text-xs font-semibold"><?= esc($province['name']) ?></span>
-                                    <div class="w-4 h-4 rounded border border-slate-300 flex items-center justify-center bg-white" id="box-prov-<?= esc($province['name']) ?>"></div>
-                                </button>
-                            <?php endforeach; ?>
+
+                        <!-- Trigger box -->
+                        <div onclick="toggleDropdownMenu('province')" id="trigger-province" class="min-h-[48px] w-full p-2.5 bg-white border border-slate-200 rounded-xl cursor-pointer hover:border-slate-300 transition-all flex items-center justify-between gap-2 shadow-xs">
+                            <div class="flex flex-wrap items-center gap-1.5 flex-1" id="chips-province">
+                                <span class="text-xs text-slate-400 pl-1">Select province...</span>
+                            </div>
+                            <div class="flex items-center gap-1 shrink-0 text-slate-400">
+                                <i data-lucide="chevron-down" class="w-4 h-4 transition-transform duration-200" id="chevron-province"></i>
+                            </div>
+                        </div>
+
+                        <!-- Dropdown Menu -->
+                        <div id="menu-province" class="hidden absolute z-30 top-full left-0 right-0 mt-1.5 bg-white border border-slate-200 rounded-xl shadow-xl overflow-hidden">
+                            <!-- Search box -->
+                            <div class="p-2.5 border-b border-slate-100 bg-slate-50/80 flex items-center gap-2">
+                                <i data-lucide="search" class="w-4 h-4 text-slate-400 shrink-0"></i>
+                                <input type="text" id="search-input-province" oninput="filterDropdownOptions('province', this.value)" placeholder="Type to filter provinces (e.g. Gauteng, Western Cape)..." class="w-full text-xs bg-transparent border-none outline-none text-slate-900 placeholder:text-slate-400">
+                            </div>
+
+                            <!-- List -->
+                            <div class="max-h-56 overflow-y-auto p-1.5 space-y-0.5" id="options-province">
+                                <?php foreach($provinces as $province): ?>
+                                    <div onclick="toggleMultiItem('province', '<?= esc($province['name']) ?>')" id="chk-province-<?= esc($province['name']) ?>" class="flex items-center justify-between p-2.5 rounded-lg text-xs hover:bg-slate-50 text-slate-700 font-medium cursor-pointer transition-all opt-item-province" data-name="<?= esc(strtolower($province['name'])) ?>">
+                                        <div class="flex items-center gap-2.5 truncate pr-2">
+                                            <div class="w-4 h-4 rounded border border-slate-300 flex items-center justify-center bg-white shrink-0" id="box-province-<?= esc($province['name']) ?>"></div>
+                                            <span class="truncate"><?= esc($province['name']) ?></span>
+                                        </div>
+                                    </div>
+                                <?php endforeach; ?>
+                                <div id="no-match-province" class="hidden p-6 text-center text-slate-400 text-xs">No matching provinces found</div>
+                            </div>
                         </div>
                     </div>
 
-                    <!-- State Organs -->
-                    <div class="space-y-3 pt-6 border-t border-slate-100">
-                        <div class="flex justify-between items-center bg-slate-50 p-2 rounded-lg">
-                            <h4 class="text-xs font-bold text-slate-400 uppercase tracking-wider flex items-center gap-1">
-                                <i data-lucide="building-2" class="w-4 h-4 text-primary"></i> 3. Select Organs of State
-                            </h4>
-                            <span class="text-xs text-slate-500">Multiselect enabled matching bid targets</span>
+                    <!-- Organ of State Searchable Dropdown -->
+                    <div class="space-y-2 relative" id="dropdown-wrapper-organ">
+                        <div class="flex justify-between items-center">
+                            <label class="text-xs font-bold text-slate-700 uppercase tracking-wider flex items-center gap-1.5">
+                                <i data-lucide="building-2" class="w-4 h-4 text-primary"></i> 3. Organ of State
+                            </label>
+                            <span class="text-xs font-semibold text-slate-500 bg-slate-100 px-2.5 py-0.5 rounded-full" id="lbl-organ-limit">
+                                Multiselect enabled
+                            </span>
                         </div>
-                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2.5">
-                            <?php foreach($organs as $organ): ?>
-                                <button type="button" onclick="toggleMultiItem('organ', '<?= esc($organ['name']) ?>')" id="chk-organ-<?= esc($organ['name']) ?>" class="flex items-center justify-between p-3 rounded-lg border border-slate-100 hover:bg-slate-50 text-slate-700 text-left transition-all">
-                                    <span class="text-xs truncate"><?= esc($organ['name']) ?></span>
-                                    <div class="w-4 h-4 rounded border border-slate-300 flex items-center justify-center bg-white" id="box-organ-<?= esc($organ['name']) ?>"></div>
-                                </button>
-                            <?php endforeach; ?>
+
+                        <!-- Trigger box -->
+                        <div onclick="toggleDropdownMenu('organ')" id="trigger-organ" class="min-h-[48px] w-full p-2.5 bg-white border border-slate-200 rounded-xl cursor-pointer hover:border-slate-300 transition-all flex items-center justify-between gap-2 shadow-xs">
+                            <div class="flex flex-wrap items-center gap-1.5 flex-1" id="chips-organ">
+                                <span class="text-xs text-slate-400 pl-1">Select organs of state...</span>
+                            </div>
+                            <div class="flex items-center gap-1 shrink-0 text-slate-400">
+                                <i data-lucide="chevron-down" class="w-4 h-4 transition-transform duration-200" id="chevron-organ"></i>
+                            </div>
+                        </div>
+
+                        <!-- Dropdown Menu -->
+                        <div id="menu-organ" class="hidden absolute z-30 top-full left-0 right-0 mt-1.5 bg-white border border-slate-200 rounded-xl shadow-xl overflow-hidden">
+                            <!-- Search box -->
+                            <div class="p-2.5 border-b border-slate-100 bg-slate-50/80 flex items-center gap-2">
+                                <i data-lucide="search" class="w-4 h-4 text-slate-400 shrink-0"></i>
+                                <input type="text" id="search-input-organ" oninput="filterDropdownOptions('organ', this.value)" placeholder="Type to filter departments / organs (e.g. Treasury, Eskom)..." class="w-full text-xs bg-transparent border-none outline-none text-slate-900 placeholder:text-slate-400">
+                            </div>
+
+                            <!-- List -->
+                            <div class="max-h-56 overflow-y-auto p-1.5 space-y-0.5" id="options-organ">
+                                <?php foreach($organs as $organ): ?>
+                                    <div onclick="toggleMultiItem('organ', '<?= esc($organ['name']) ?>')" id="chk-organ-<?= esc($organ['name']) ?>" class="flex items-center justify-between p-2.5 rounded-lg text-xs hover:bg-slate-50 text-slate-700 font-medium cursor-pointer transition-all opt-item-organ" data-name="<?= esc(strtolower($organ['name'])) ?>">
+                                        <div class="flex items-center gap-2.5 truncate pr-2">
+                                            <div class="w-4 h-4 rounded border border-slate-300 flex items-center justify-center bg-white shrink-0" id="box-organ-<?= esc($organ['name']) ?>"></div>
+                                            <span class="truncate"><?= esc($organ['name']) ?></span>
+                                        </div>
+                                    </div>
+                                <?php endforeach; ?>
+                                <div id="no-match-organ" class="hidden p-6 text-center text-slate-400 text-xs">No matching organs of state found</div>
+                            </div>
                         </div>
                     </div>
 
@@ -640,7 +721,55 @@
         }
     }
 
-    // 4. Multiple selection Scopes handling
+    // 4. Multiple selection Scopes handling & Searchable Dropdowns
+    function toggleDropdownMenu(type) {
+        const types = ['category', 'province', 'organ'];
+        types.forEach(t => {
+            const menu = document.getElementById('menu-' + t);
+            const chevron = document.getElementById('chevron-' + t);
+            if (t === type) {
+                const isOpen = !menu.classList.contains('hidden');
+                if (isOpen) {
+                    menu.classList.add('hidden');
+                    if (chevron) chevron.classList.remove('rotate-180');
+                } else {
+                    menu.classList.remove('hidden');
+                    if (chevron) chevron.classList.add('rotate-180');
+                    const searchInput = document.getElementById('search-input-' + t);
+                    if (searchInput) searchInput.focus();
+                }
+            } else {
+                if (menu) menu.classList.add('hidden');
+                if (chevron) chevron.classList.remove('rotate-180');
+            }
+        });
+    }
+
+    function filterDropdownOptions(type, query) {
+        const q = query.toLowerCase().trim();
+        const items = document.querySelectorAll('.opt-item-' + type);
+        let matchCount = 0;
+
+        items.forEach(item => {
+            const name = item.getAttribute('data-name') || '';
+            if (name.includes(q)) {
+                item.style.display = 'flex';
+                matchCount++;
+            } else {
+                item.style.display = 'none';
+            }
+        });
+
+        const noMatch = document.getElementById('no-match-' + type);
+        if (noMatch) {
+            noMatch.style.display = (matchCount === 0) ? 'block' : 'none';
+        }
+    }
+
+    function removeSelectedItem(type, name) {
+        toggleMultiItem(type, name);
+    }
+
     function toggleMultiItem(type, name) {
         const activeLimit = limits[activePackageId];
         const array = (type === 'category') ? selections.categories : (type === 'province') ? selections.provinces : selections.organs;
@@ -675,31 +804,66 @@
 
     function redrawSelectedMultiViews(type) {
         const array = (type === 'category') ? selections.categories : (type === 'province') ? selections.provinces : selections.organs;
-        // Lookup elements
-        const parentDiv = (type === 'category') ? 'panel-filters' : 'panel-filters'; 
-        
-        // Loop over choices updating checkboxes
-        const btnPrefix = 'chk-' + type + '-';
         const boxPrefix = 'box-' + type + '-';
+        const chkPrefix = 'chk-' + type + '-';
 
-        // Select all matching button tags
-        const allButtons = document.querySelectorAll(`[id^="${btnPrefix}"]`);
-        allButtons.forEach(btn => {
-            const itemName = btn.id.replace(btnPrefix, '');
+        // Update list option row checkboxes
+        const allItems = document.querySelectorAll(`[id^="${chkPrefix}"]`);
+        allItems.forEach(item => {
+            const itemName = item.id.replace(chkPrefix, '');
             const box = document.getElementById(boxPrefix + itemName);
             const isSelected = array.includes(itemName);
 
             if (isSelected) {
-                btn.className = "flex items-center justify-between p-3 rounded-lg border border-primary bg-primary/[0.02] text-primary text-left transition-all";
-                box.className = "w-4 h-4 rounded border bg-primary border-primary text-white flex items-center justify-center font-bold text-[10px]";
-                box.innerHTML = "✓";
+                item.className = "flex items-center justify-between p-2.5 rounded-lg text-xs bg-primary/5 text-primary font-bold cursor-pointer transition-all opt-item-" + type;
+                if (box) {
+                    box.className = "w-4 h-4 rounded border bg-primary border-primary text-white flex items-center justify-center font-bold text-[10px] shrink-0";
+                    box.innerHTML = "✓";
+                }
             } else {
-                btn.className = "flex items-center justify-between p-3 rounded-lg border border-slate-100 hover:bg-slate-50 text-slate-700 text-left transition-all";
-                box.className = "w-4 h-4 rounded border border-slate-300 flex items-center justify-center bg-white";
-                box.innerHTML = "";
+                item.className = "flex items-center justify-between p-2.5 rounded-lg text-xs hover:bg-slate-50 text-slate-700 font-medium cursor-pointer transition-all opt-item-" + type;
+                if (box) {
+                    box.className = "w-4 h-4 rounded border border-slate-300 flex items-center justify-center bg-white shrink-0";
+                    box.innerHTML = "";
+                }
             }
         });
+
+        // Update Trigger Chips Container
+        const chipsContainer = document.getElementById('chips-' + type);
+        if (chipsContainer) {
+            if (array.length === 0) {
+                const placeholder = (type === 'category') ? 'Select category...' : (type === 'province') ? 'Select province...' : 'Select organs of state...';
+                chipsContainer.innerHTML = `<span class="text-xs text-slate-400 pl-1">${placeholder}</span>`;
+            } else {
+                let html = '';
+                array.forEach(item => {
+                    const safeName = item.replace(/'/g, "\\'");
+                    html += `<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-primary/10 text-primary text-xs font-semibold border border-primary/20">
+                        <span>${item}</span>
+                        <button type="button" onclick="event.stopPropagation(); removeSelectedItem('${type}', '${safeName}')" class="hover:bg-primary/20 rounded p-0.5 transition-colors">
+                            <i data-lucide="x" class="w-3 h-3"></i>
+                        </button>
+                    </span>`;
+                });
+                chipsContainer.innerHTML = html;
+                if (window.lucide) lucide.createIcons();
+            }
+        }
     }
+
+    // Close dropdowns on outside click
+    document.addEventListener('click', function(e) {
+        ['category', 'province', 'organ'].forEach(t => {
+            const wrapper = document.getElementById('dropdown-wrapper-' + t);
+            if (wrapper && !wrapper.contains(e.target)) {
+                const menu = document.getElementById('menu-' + t);
+                const chevron = document.getElementById('chevron-' + t);
+                if (menu) menu.classList.add('hidden');
+                if (chevron) chevron.classList.remove('rotate-180');
+            }
+        });
+    });
 
     function updateLimitLabelsTextAndScopes() {
         const activeLimit = limits[activePackageId];
