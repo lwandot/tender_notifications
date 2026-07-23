@@ -99,6 +99,22 @@
 
     <!-- Main Content Area -->
     <section class="flex-1 p-6 md:p-10 space-y-8">
+        <!-- Main Content Panel -->
+    <section class="flex-1 p-6 md:p-10 space-y-8">
+        <!-- Banner introducing Subscribe notifications -->
+        <div class="bg-gradient-to-r from-primary to-indigo-700 text-white rounded-xl p-6 shadow-sm flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+            <div class="space-y-1">
+                <span class="bg-white/20 text-[10px] sm:text-xs uppercase tracking-wider font-bold px-2.5 py-0.5 rounded-full inline-flex items-center gap-1">
+                    🟢 Instant Whatsapp Updates Enabled
+                </span>
+                <h3 class="text-lg font-bold">Receive active State Tenders straight on your phone!</h3>
+                <p class="text-xs text-indigo-100">Setup personalized alert digests. Filter multiple categories, provinces and state organs (Starts from R29.00/mo).</p>
+            </div>
+            <a href="<?= base_url('subscription') ?>" class="bg-white text-primary text-xs font-bold py-2.5 px-4 rounded-lg shadow-sm hover:bg-indigo-50 active:scale-95 transition-all shrink-0">
+                Setup Live Alerts
+            </a>
+        </div>
+        
         <!-- Search Bar -->
         <form method="get" action="/" class="max-w-3xl">
             <label class="relative block group">
