@@ -257,7 +257,7 @@
                                     <span class="ml-auto text-xs font-bold uppercase tracking-wider px-2 py-0.5 rounded <?= $statusClass ?>"><?= esc(ucfirst($tenderStatus)) ?></span>
                                 </div>
                                 <h3 class="text-lg font-bold text-slate-900 dark:text-white group-hover:text-primary transition-colors">
-                                    <a href="/tender/view/<?= esc($tender['ocid'] ?? '') ?>">
+                                    <a href="<?= base_url('tender/view/' . esc($tender['ocid'] ?? '')) ?>">
                                         <?= esc(mb_strimwidth($procurementEntity, 0, 80, '...')) ?>
                                     </a>
                                 </h3>
@@ -297,7 +297,7 @@
                                 <button class="p-2 text-slate-400 hover:text-primary rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800" aria-label="Bookmark">
                                     <span class="material-symbols-outlined">bookmark</span>
                                 </button>
-                                <a href="/tender/view/<?= esc($tender['ocid'] ?? '') ?>" class="text-slate-300 group-hover:translate-x-1 transition-transform">
+                                <a href="<?= base_url('tender/view/' . esc($tender['ocid'] ?? '')) ?>" class="text-slate-300 group-hover:translate-x-1 transition-transform">
                                     <span class="material-symbols-outlined">chevron_right</span>
                                 </a>
                             </div>

@@ -3,7 +3,7 @@
 <?= $this->section('content') ?>
 
 <nav class="flex items-top gap-2 mb-6 text-sm px-6 md:px-10">
-    <a class="text-slate-500 hover:text-primary dark:text-slate-400" href="/">Tender Browse</a>
+    <a class="text-slate-500 hover:text-primary dark:text-slate-400" href="<?= base_url('/') ?>">Tender Browse</a>
     <span class="material-symbols-outlined text-slate-400 text-sm">chevron_right</span>
     <span class="text-slate-900 dark:text-slate-100 font-medium">Tender Details</span>
 </nav>
@@ -18,7 +18,7 @@
                 Tender Reference: <span class="font-semibold"><?= esc($tender['title'] ?? ($tender['title'] ?? 'N/A')) ?></span>
             </p>
         </div>
-        <a href="/" class="inline-flex items-center justify-center rounded-lg h-11 px-6 bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-slate-100 text-sm font-bold border border-slate-200 dark:border-slate-700 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors">
+        <a href="<?= base_url('/') ?>" class="inline-flex items-center justify-center rounded-lg h-11 px-6 bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-slate-100 text-sm font-bold border border-slate-200 dark:border-slate-700 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors">
             <span class="material-symbols-outlined mr-2">arrow_back</span>
             Back to Browse
         </a>
