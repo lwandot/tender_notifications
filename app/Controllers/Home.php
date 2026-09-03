@@ -23,6 +23,7 @@ class Home extends BaseController
         // Set default date range: today to 7 days from now
         $today = date('Y-m-d');
         $sevenDaysFromNow = date('Y-m-d', strtotime('+7 days'));
+        $sevenDaysBack = date('Y-m-d', strtotime('-7 days'));
         $monthBack = date('Y-m-d', strtotime('-30 days'));
 
         // Get filters from request (only include values explicitly provided by the user)
@@ -81,5 +82,63 @@ class Home extends BaseController
     {
         $types = ['goods', 'services', 'works'];
         return $this->response->setJSON(['types' => $types]);
+    }
+
+    public function fetchTendersAjax()
+    {
+        $tenderModel = new TenderModel();
+
+        $page = (int) ($this->request->getVar('page') ?? 1);
+        $perPage = (int) ($this->request->getVar('perPage') ?? 10);
+        $offset = ($page - 1) * $perPage;
+
+        // default date ranges
+        $today = date('Y-m-d');
+        $sevenDaysFromNow = date('Y-m-d', strtotime('+7 days'));
+        $sevenDaysBack = date('Y-m-d', strtotime('-7 days'));
+
+        $filters = [
+            'province_id' => $this->request->getVar('province_id'),
+            'organ_of_state_id' => $this->request->getVar('organ_of_state_id'),
+            'category_id' => $this->request->getVar('category_id'),
+            'tender_type' => $this->request->getVar('tender_type'),
+            'search' => $this->request->getVar('search'),
+            'dateFrom' => $this->request->getVar('dateFrom') ?: $sevenDaysBack,
+            'dateTo' => $this->request->getVar('dateTo') ?: $today,
+        ];
+
+        $filters = array_filter($filters, fn($v) => $v !== null && $v !== '');
+
+        if (!empty($filters)) {
+            $result = $tenderModel->filterTenders($filters, $perPage, $offset);
+            $tenders = $result['tenders'];
+            $total = $tenderModel->countFilteredTenders($filters);
+            $requestUrl = $result['request_url'] ?? null;
+            $rawResponse = $result['raw_response'] ?? null;
+        } else {
+            $result = $tenderModel->getActiveTenders($perPage, $offset, $sevenDaysBack, $sevenDaysFromNow);
+            $tenders = $result['tenders'];
+            $total = $tenderModel->countFilteredTenders(['dateFrom' => $sevenDaysBack, 'dateTo' => $sevenDaysFromNow]);
+            $requestUrl = $result['request_url'] ?? null;
+            $rawResponse = $result['raw_response'] ?? null;
+        }
+
+        $partialData = [
+            'tenders' => $tenders,
+            'total' => $total,
+            'perPage' => $perPage,
+            'page' => $page,
+        ];
+
+        $html = view('partials/tenders_list', $partialData);
+
+        return $this->response->setJSON([
+            'html' => $html,
+            'total' => $total,
+            'page' => $page,
+            'perPage' => $perPage,
+            'requestUrl' => $requestUrl,
+            'rawResponse' => $rawResponse,
+        ]);
     }
 }
