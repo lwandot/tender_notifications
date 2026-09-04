@@ -11,6 +11,27 @@ class Home extends BaseController
 {
     public function index()
     {
+        // In development, use central mock data from Config\DevMocks
+        if (defined('ENVIRONMENT') && ENVIRONMENT === 'development') {
+            $dev = new \Config\DevMocks();
+            $tenders = $dev->tenders;
+
+            $data = [
+                'title' => 'Government Tenders (Development)',
+                'tenders' => $tenders,
+                'total' => count($tenders),
+                'perPage' => 10,
+                'page' => 1,
+                'categories' => [],
+                'organs' => [],
+                'provinces' => [],
+                'filters' => [],
+                'rawApiResponse' => [],
+                'requestUrl' => null,
+            ];
+
+            return view('home', $data);
+        }
         $tenderModel = new TenderModel();
         $categoryModel = new CategoryModel();
         $organModel = new OrganOfStateModel();
@@ -91,6 +112,34 @@ class Home extends BaseController
         $page = (int) ($this->request->getVar('page') ?? 1);
         $perPage = (int) ($this->request->getVar('perPage') ?? 10);
         $offset = ($page - 1) * $perPage;
+
+        // Serve mock paginated data in development
+        if (defined('ENVIRONMENT') && ENVIRONMENT === 'development') {
+            $dev = new \Config\DevMocks();
+            $all = $dev->tenders;
+            $total = count($all);
+            $tenders = array_slice($all, $offset, $perPage);
+            $requestUrl = null;
+            $rawResponse = [];
+
+            $partialData = [
+                'tenders' => $tenders,
+                'total' => $total,
+                'perPage' => $perPage,
+                'page' => $page,
+            ];
+
+            $html = view('partials/tenders_list', $partialData);
+
+            return $this->response->setJSON([
+                'html' => $html,
+                'total' => $total,
+                'page' => $page,
+                'perPage' => $perPage,
+                'requestUrl' => $requestUrl,
+                'rawResponse' => $rawResponse,
+            ]);
+        }
 
         // default date ranges
         $today = date('Y-m-d');
